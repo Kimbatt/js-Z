@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>js-Z</title>
+    
+    <style>
+        button
+        {
+            background-color: #146dff;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            padding: 12px 15px 12px 15px; /*top right bottom left*/
+            margin: 5px 0px 5px 20px;
+            font-family: "Verdana";
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        
+        button:hover
+        {
+            background-color: #54adff;
+            border: none;
+            border-radius: 5px;
+            //color: #000000;
+            padding: 12px 15px 12px 15px; /*top right bottom left*/
+            margin: 5px 0px 5px 20px;
+            font-family: "Verdana";
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        button:disabled
+        {
+            background-color: #77abff;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            padding: 12px 15px 12px 15px; /*top right bottom left*/
+            margin: 5px 0px 5px 20px;
+            font-family: "Verdana";
+            font-size: 20px;
+            cursor: not-allowed;
+        }
+        
+        textarea
+        {
+            font-family: "Consolas";
+            font-weight: bold;
+            font-size: 20px;
+            margin: 20px;
+            padding: 10px;
+            width: 90%;
+            height: 200px;
+        }
+
+        input
+        {
+            font-family: "Consolas";
+            font-weight: bold;
+            font-size: 20px;
+            margin: 20px;
+            padding: 10px;
+            width: 200px;
+        }
+        
+        .slider-container
+        {
+            margin-left: 20px;
+            display: inline-block;
+            padding-top: 0px;
+            border: 2px solid #146dff;
+            border-radius: 5px;
+            background: #202020;
+        }
+    </style>
+</head>
+
+<body style="background: #484D50">
+
+<div style="padding-top: 10px; padding-left: 20px; font-family: Verdana; font-weight: bold; color: white; font-size: 18px;">Type your Javascript code here:</div>
+<textarea id="text_area">alert(1)</textarea>
+<br />
+<div>
+    <button onclick="button()" style="display: inline-block; vertical-align: bottom; margin-left: 40px; margin-bottom: 18px; margin-right: 20px; font-size: 35px">Fuck shit up</button>
+    <div class="slider-container" style="width: 220px;">
+        <div id="zalgo_level_text" style="padding: 15px; font-family: Verdana; font-size: 20px; font-weight: bold; color: white;">Zalgo level: 3</div>
+        <input type="range" min="0" max="100" value="3" oninput="slider_zalgoLevel(this)" style="margin: 0px 20px 0px 20px; width: 160px;">
+    </div>
+    <div class="slider-container" style="width: 330px;">
+        <div id="variable_name_length_text" style="padding: 15px; font-family: Verdana; font-size: 20px; font-weight: bold; color: white;">Variable name length: 5</div>
+        <input type="range" min="3" max="50" value="5" oninput="slider_variableLength(this)" style="margin: 0px 20px 0px 20px; width: 270px;">
+    </div>
+</div>
+<br />
+<textarea id="result_text" style="height: 350px; margin-top: 5px;" readonly></textarea>
+<br />
+<button onclick="eval(document.getElementById('result_text').value)" style="width: 150px;">Eval this</button>
+
+<a href="https://github.com/Kimbatt/js-z" style="position:absolute; width: 32px; height: 32px; top:20px; right:20px;">
+<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="white" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+
+<script>
+
+var zalgoLevel = 3;
+function slider_zalgoLevel(e)
+{
+    document.getElementById("zalgo_level_text").innerHTML = "Zalgo level: " + e.value;
+    zalgoLevel = Number(e.value);
+}
+
+var variableNameLength = 5;
+function slider_variableLength(e)
+{
+    document.getElementById("variable_name_length_text").innerHTML = "Variable name length: " + e.value;
+    variableNameLength = Number(e.value);
+}
+
+var validChars =
+[
+    "\u0300", "\u0301", "\u0303", "\u0304", "\u0305", "\u0307", "\u0309", "\u030a",
+    "\u030d", "\u030e", "\u030f", "\u0310", "\u0311", "\u0312", "\u0313", "\u0314",
+    "\u0315", "\u0316", "\u0317", "\u0318", "\u0319", "\u031a", "\u031b", "\u031c",
+    "\u031d", "\u031e", "\u031f", "\u0320", "\u0321", "\u0322", "\u0323", "\u0324",
+    "\u0325", "\u0327", "\u0328", "\u0329", "\u032a", "\u032b", "\u032c", "\u032d",
+    "\u032e", "\u032f", "\u0330", "\u0331", "\u0332", "\u0333", "\u0334", "\u0335",
+    "\u0336", "\u0337", "\u0338", "\u0339", "\u033a", "\u033b", "\u033c", "\u033d",
+    "\u033e", "\u033f", "\u0340", "\u0341", "\u0342", "\u0343", "\u0345", "\u0346",
+    "\u0347", "\u0348", "\u0349", "\u034a", "\u034b", "\u034c", "\u034d", "\u034e",
+    "\u034f", "\u0350", "\u0351", "\u0352", "\u0353", "\u0354", "\u0355", "\u0356",
+    "\u0357", "\u0359", "\u035a", "\u035b", "\u035c", "\u035d", "\u035e", "\u035f",
+    "\u0360", "\u0361", "\u0362", "\u0363", "\u0364", "\u0365", "\u0366", "\u0367",
+    "\u0368", "\u0369", "\u036a", "\u036b", "\u036c", "\u036d", "\u036e", "\u036f",
+    "\u0483", "\u0484", "\u0485", "\u0486", "\u0592", "\u0593", "\u0594", "\u0595",
+    "\u0597", "\u0598", "\u0599", "\u059a", "\u059c", "\u059d", "\u059e", "\u059f",
+    "\u05a0", "\u05a1", "\u05a8", "\u05a9", "\u05ab", "\u05ac", "\u05ad", "\u05ae",
+    "\u05af", "\u05b1", "\u05b2", "\u05b3", "\u05b4", "\u05b5", "\u05b6", "\u05b8",
+    "\u05b9", "\u05ba", "\u05bb", "\u05bc", "\u05bf", "\u05c1", "\u05c2", "\u05c4",
+    "\u05c7", "\u0610", "\u0611", "\u0612", "\u0613", "\u0614", "\u0615", "\u0616",
+    "\u0617", "\u0618", "\u0619", "\u061a", "\u064b", "\u064c", "\u064d", "\u064e",
+    "\u064f", "\u0650", "\u0651", "\u0652", "\u0653", "\u0654", "\u0655", "\u0656",
+    "\u0657", "\u0658", "\u0659", "\u065a", "\u065b", "\u065c", "\u065d", "\u065e",
+    "\u065f", "\u0670", "\u0674", "\u06d6", "\u06d7", "\u06d8", "\u06d9", "\u06da",
+    "\u06db", "\u06dc", "\u06df", "\u06e0", "\u06e1", "\u06e2", "\u06e3", "\u06e4",
+    "\u06e5", "\u06e6", "\u06e7", "\u06e8", "\u06ea", "\u06eb", "\u06ec", "\u06ed",
+    "\u0711", "\u0730", "\u0731", "\u0732", "\u0733", "\u0734", "\u0735", "\u0736",
+    "\u0737", "\u0738", "\u0739", "\u073a", "\u073b", "\u073c", "\u073d", "\u073e",
+    "\u073f", "\u0740", "\u0741", "\u0742", "\u0743", "\u0744", "\u0745", "\u0746",
+    "\u0747", "\u0748", "\u0749", "\u074a", "\u07a6", "\u07a7", "\u07a8", "\u07a9",
+    "\u07aa", "\u07ab", "\u07ac", "\u07ad", "\u07ae", "\u07af", "\u07b0", "\u07eb",
+    "\u07ec", "\u07ed", "\u07ee", "\u07ef", "\u07f0", "\u07f1", "\u07f2", "\u07f3",
+    "\u08e4", "\u08e5", "\u08e6", "\u08e7", "\u08e8", "\u08e9", "\u08ea", "\u08eb",
+    "\u08ec", "\u08ed", "\u08ee", "\u08ef", "\u08f0", "\u08f1", "\u08f2", "\u08f3",
+    "\u08f4", "\u08f5", "\u08f6", "\u08f7", "\u08f8", "\u08f9", "\u08fa", "\u08fb",
+    "\u08fc", "\u08fd", "\u08fe", "\u0e31", "\u0e34", "\u0e35", "\u0e36", "\u0e37",
+    "\u0e38", "\u0e39", "\u0e3a", "\u0e47", "\u0e48", "\u0e49", "\u0e4a", "\u0e4b",
+    "\u0e4c", "\u0e4d", "\u0e4e", "\u0eb1", "\u0eb4", "\u0eb5", "\u0eb6", "\u0eb7",
+    "\u0eb8", "\u0eb9", "\u0ebb", "\u0ebc", "\u0ec8", "\u0ec9", "\u0eca", "\u0ecb",
+    "\u0ecc", "\u0ecd", "\u0f19", "\u0f35", "\u0f37", "\u0f39", "\u0f71", "\u0f72",
+    "\u0f73", "\u0f74", "\u0f75", "\u0f76", "\u0f77", "\u0f78", "\u0f79", "\u0f7a",
+    "\u0f7b", "\u0f7c", "\u0f7d", "\u0f7e", "\u0f80", "\u0f81", "\u0f82", "\u0f83",
+    "\u0f84", "\u0f86", "\u0f87", "\u0f8d", "\u0f8e", "\u0f8f", "\u0f90", "\u0f91",
+    "\u0f92", "\u0f93", "\u0f94", "\u0f95", "\u0f96", "\u0f97", "\u0f99", "\u0f9a",
+    "\u0f9b", "\u0f9c", "\u0f9d", "\u0f9e", "\u0f9f", "\u0fa0", "\u0fa1", "\u0fa2",
+    "\u0fa3", "\u0fa4", "\u0fa5", "\u0fa6", "\u0fa7", "\u0fa8", "\u0fa9", "\u0faa",
+    "\u0fab", "\u0fac", "\u0fad", "\u0fae", "\u0faf", "\u0fb0", "\u0fb1", "\u0fb2",
+    "\u0fb3", "\u0fb4", "\u0fb5", "\u0fb6", "\u0fb7", "\u0fb8", "\u0fb9", "\u0fba",
+    "\u0fbb", "\u0fbc", "\u0fc6", "\u135d", "\u135e", "\u135f", "\u17b4", "\u17b5",
+    "\u17d2", "\u180b", "\u180c", "\u180d", "\u18a9", "\u1dc0", "\u1dc1", "\u1dc2",
+    "\u1dc3", "\u1dc4", "\u1dc5", "\u1dc6", "\u1dc7", "\u1dc8", "\u1dc9", "\u1dca",
+    "\u1dfe", "\u1dff", "\u200c", "\u200d", "\u2cef", "\u2cf0", "\u2cf1", "\u2d7f",
+    "\u2de0", "\u2de1", "\u2de2", "\u2de3", "\u2de4", "\u2de5", "\u2de6", "\u2de7",
+    "\u2de8", "\u2de9", "\u2dea", "\u2deb", "\u2dec", "\u2ded", "\u2dee", "\u2def",
+    "\u2df0", "\u2df1", "\u2df2", "\u2df3", "\u2df4", "\u2df5", "\u2df6", "\u2df7",
+    "\u2df8", "\u2df9", "\u2dfa", "\u2dfb", "\u2dfc", "\u2dfd", "\u2dfe", "\u2dff",
+    "\ua66f", "\ua67c", "\ua67d", "\ufb1e", "\ufc5e", "\ufc5f", "\ufc60", "\ufc61",
+    "\ufc62", "\ufc63", "\ufe00", "\ufe01", "\ufe02", "\ufe03", "\ufe04", "\ufe05",
+    "\ufe06", "\ufe07", "\ufe08", "\ufe09", "\ufe0a", "\ufe0b", "\ufe0c", "\ufe0d",
+    "\ufe0e", "\ufe0f",
+];
+
+function shuffle(array)
+{
+    var current = array.length;
+    var temp;
+    var rand;
+
+    while (current != 0)
+    {
+        rand = Math.floor(Math.random() * current);
+        --current;
+
+        temp = array[current];
+        array[current] = array[rand];
+        array[rand] = temp;
+    }
+}
+
+function urand(min, max)
+{
+    if (max === undefined)
+        return Math.floor(Math.random() * min);
+    
+    var diff = max - min;
+    return Math.floor(Math.random() * diff) + min;
+}
+
+function RandomElementOf(array, count)
+{
+    if (count && typeof(count) === "number")
+    {
+        var ret = "";
+        for (var i = 0; i < count; ++i)
+            ret += array[urand(array.length)];
+        
+        return ret;
+    }
+    else
+        return array[urand(array.length)];
+}
+
+function IsValidName(name)
+{
+    try
+    {
+        eval("var " + name);
+        return true;
+    }
+    catch (e)
+    {
+        return false;
+    }
+}
+
+shuffle(validChars);
+
+var zalgoCharsExtended =
+[   
+    "\u08f1", "\u0363", "\u0364", "\u0365", "\u0366", "\u0367", "\u0368", "\u0369",
+    "\u036a", "\u036b", "\u036c", "\u036d", "\u036e", "\u036f", "\u0483", "\u0484",
+    "\u0485", "\u0486", "\u0593", "\u0594", "\u0595", "\u0597", "\u0598", "\u059c",
+    "\u059e", "\u059f", "\u05a0", "\u05a1", "\u05a8", "\u05a9", "\u05ab", "\u05ac",
+    "\u05af", "\u05b5", "\u05c4", "\u0610", "\u0611", "\u0612", "\u0613", "\u0614",
+    "\u0615", "\u0616", "\u0617", "\u0618", "\u0619", "\u061a", "\u0656", "\u0657",
+    "\u0658", "\u065a", "\u065b", "\u065d", "\u065e", "\u065f", "\u0674", "\u06d6",
+    "\u06d7", "\u06d8", "\u06d9", "\u06da", "\u06db", "\u06dc", "\u06df", "\u06e0",
+    "\u06e1", "\u06e2", "\u06e3", "\u06e4", "\u06e7", "\u06e8", "\u06ea", "\u06eb",
+    "\u06ec", "\u06ed", "\u0711", "\u0730", "\u0731", "\u0733", "\u0734", "\u0735",
+    "\u0736", "\u0737", "\u0738", "\u0739", "\u073a", "\u073b", "\u073c", "\u073d",
+    "\u073e", "\u073f", "\u0743", "\u0744", "\u0745", "\u0746", "\u0747", "\u0748",
+    "\u0749", "\u074a", "\u07eb", "\u07ec", "\u07ed", "\u07ee", "\u07ef", "\u07f0",
+    "\u07f1", "\u07f2", "\u07f3", "\u08e4", "\u08e5", "\u08e6", "\u08e7", "\u08e8",
+    "\u08e9", "\u08f0", "\u08f2", "\u08f3", "\u08f4", "\u08f5", "\u08f6", "\u08f7",
+    "\u08f8", "\u08f9", "\u08fa", "\u08fb", "\u08fc", "\u08fd", "\u08fe", "\u0e31",
+    "\u0e34", "\u0e35", "\u0e36", "\u0e37", "\u0e38", "\u0e39", "\u0e3a", "\u0e47",
+    "\u0e48", "\u0e49", "\u0e4a", "\u0e4b", "\u0e4c", "\u0e4d", "\u0e4e", "\u0ec9",
+    "\u0f19", "\u0f35", "\u0f37", "\u0f72", "\u0f7a", "\u0f7b", "\u0f7c", "\u0f7d",
+    "\u0f80", "\u0f84", "\u1dc0", "\u1dc1", "\u1dc2", "\u1dc3", "\u1dc4", "\u1dc5",
+    "\u1dc6", "\u1dc7", "\u1dc8", "\u1dc9", "\u1dca", "\u1dfe", "\u1dff", "\ufb1e",
+    "\ufc5e", "\ufc5f", "\ufc60", "\ufc61", "\ufc62", "\ufc63"
+];
+
+// stolen from http://eeemo.net/
+var zalgo_up =
+[
+    '\u030d', '\u030e', '\u0304', '\u0305', 
+    '\u033f', '\u0311', '\u0306', '\u0310', 
+    '\u0352', '\u0357', '\u0351', '\u0307', 
+    '\u0308', '\u030a', '\u0342', '\u0343', 
+    '\u0344', '\u034a', '\u034b', '\u034c', 
+    '\u0303', '\u0302', '\u030c', '\u0350', 
+    '\u0300', '\u0301', '\u030b', '\u030f', 
+    '\u0312', '\u0313', '\u0314', '\u033d', 
+    '\u0309', '\u0363', '\u0364', '\u0365', 
+    '\u0366', '\u0367', '\u0368', '\u0369', 
+    '\u036a', '\u036b', '\u036c', '\u036d', 
+    '\u036e', '\u036f', '\u033e', '\u035b', 
+    '\u0346', '\u031a'
+];
+
+var zalgo_down =
+[
+    '\u0316', '\u0317', '\u0318', '\u0319', 
+    '\u031c', '\u031d', '\u031e', '\u031f', 
+    '\u0320', '\u0324', '\u0325', '\u0326', 
+    '\u0329', '\u032a', '\u032b', '\u032c', 
+    '\u032d', '\u032e', '\u032f', '\u0330', 
+    '\u0331', '\u0332', '\u0333', '\u0339', 
+    '\u033a', '\u033b', '\u033c', '\u0345', 
+    '\u0347', '\u0348', '\u0349', '\u034d', 
+    '\u034e', '\u0353', '\u0354', '\u0355', 
+    '\u0356', '\u0359', '\u035a', '\u0323'
+];
+
+var zalgo_mid =
+[
+    '\u0315', '\u031b', '\u0340', '\u0341', 
+    '\u0358', '\u0321', '\u0322', '\u0327', 
+    '\u0328', '\u0334', '\u0335', '\u0336', 
+    '\u034f', '\u035c', '\u035d', '\u035e', 
+    '\u035f', '\u0360', '\u0362', '\u0338', 
+    '\u0337', '\u0361'
+];
+
+var startingChars = 
+[
+    "\u02b9", "\u02ba", "\u02bb", "\u02bc", "\u02bd", "\u02be", "\u02bf", "\u02c6",
+    "\u02c7", "\u02c8", "\u02cc", "\u02d1", "\u0374", "\u037a", "\u0559", "\u1843",
+    "\u1c78", "\u1c79", "\u1c7a", "\u1c7c", "\u1d54", "\u1d55", "\u1da5",
+    "\u309d", "\u30fd", "\ua4f8", "\ua4f9", "\ua4fa", "\ua4fb", "\ua4fc", "\ua4fd",
+    "\ua67f", "\ua717", "\ua718", "\ua719", "\ua71a", "\ua788", "\uff9e", "\uff9f",
+    "\ua9e6", "\u05d9", "\u0621", "\u0627", "\u0674", "\u06c0", "\u06c1", "\u06c2",
+    "\u06c3", "\u06d5", "\u0715", "\u0716", "\u0719", "\u071d", "\u072a", "\u072f",
+    "\u0780", "\u0787", "\u0789", "\u0799", "\u079a", "\u07a2", "\u07a3", "\u07d1",
+    "\u07e8", "\u0eb2", "\u03b3", "\u0f44", "\u0f4b", "\u0f56", "\u0f8b", "\u141d",
+    "\u141e", "\u141f", "\u1420", "\u1425", "\u1426", "\u1427", "\u1449", "\u14a1",
+    "\u14a2", "\u14bb", "\u14bc", "\u14bd", "\u14d0", "\u14d2", "\u14ea", "\u1505",
+    "\u1507", "\u1508", "\u1509", "\u150a", "\u153e", "\u1550", "\u155d", "\u156a",
+    "\u1595", "\u159f", "\u15a6", "\u15ae", "\u1690", "\u1691", "\u1692", "\u1693",
+    "\u1694", "\u16b2", "\u16cd", "\u16e7", "\u1822", "\u1823", "\u1824", "\u1825",
+    "\u1826", "\u1827", "\u1829", "\u182b", "\u1830", "\u1831", "\u1832", "\u1833",
+    "\u1834", "\u1835", "\u1836", "\u1837", "\u1838", "\u1839", "\u183a", "\u183b",
+    "\u184d", "\u1855", "\u185f", "\u186a", "\u188f", "\u189c", "\u18a4", "\u18a5",
+    "\u18a6", "\u18d9", "\u18da", "\u18de", "\u18df", "\u2d30", "\u2d3e", "\u2d42",
+    "\u2d46", "\u2d48", "\u2d53", "\u2d57", "\u318d", "\u31b4", "\u31b5", "\u31b6"
+];
+
+shuffle(startingChars);
+
+var baseChars = 
+[
+    "\u02b9", "\u02ba", "\u02bb", "\u02bc", "\u02bd", "\u02be", "\u02bf", "\u02c6",
+    "\u02c7", "\u02c8", "\u02cc", "\u02d1", "\u0374", "\u037a", "\u0559", "\u1d54",
+    "\u1d55", "\u1da5", "\ua4f8", "\ua4f9", "\ua4fa", "\ua4fb", "\ua4fc", "\ua4fd",
+    "\ua67f", "\ua717", "\ua718", "\ua719", "\ua71a", "\ua788", "\u05d9", "\u0621",
+    "\u0627", "\u0674", "\u06c0", "\u06c1", "\u06c2", "\u06c3", "\u06d5", "\u03b3"
+];
+
+var justLetters =
+[
+    "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+    "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F",
+    "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
+    "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
+];
+
+var charsThatWorkWithExtendedZalgo =
+[
+    "_", "o", "I", "x"
+];
+
+function GetRandomString(len, allowLonger)
+{
+    var name = RandomElementOf(startingChars);
+    if (len === undefined)
+    {
+        var min = variableNameLength;
+        var max = variableNameLength * 1.5;
+        var diff = max - min;
+        len = Math.floor(Math.random() * diff + min);
+    }
+    
+    while (name.length < len)
+    {
+        var chance = Math.random() * 100;
+        
+        if (chance < 95)
+        {
+            // add a random number of zalgo characters with a starting character
+            
+            if (Math.random() < 0.1)
+                name += RandomElementOf(justLetters)
+            else
+                name += RandomElementOf(baseChars);
+            
+            var min = zalgoLevel;
+            var max = zalgoLevel * 1.5;
+            var diff = max - min;
+            
+            name += RandomElementOf(zalgo_up, Math.floor(Math.random() * diff + min));
+            name += RandomElementOf(zalgo_mid, Math.floor(Math.random() * diff + min));
+            name += RandomElementOf(zalgo_down, Math.floor(Math.random() * diff + min));
+            continue;
+        }
+        else
+        {
+            // add a random extended zalgo character with a starting character
+            name += RandomElementOf(charsThatWorkWithExtendedZalgo);
+            var count = urand(1, 3);
+            var ch = RandomElementOf(zalgoCharsExtended);
+            
+            for (var j = 0; j < count; ++j)
+                name += ch;
+            
+            continue;
+        }
+        
+    }
+    
+    if (allowLonger === true)
+        return name;
+    else
+        return name.substr(0, len);
+}
+
+var usedVariableNames = [];
+function GetVarName()
+{
+    var name;
+    
+    var min = variableNameLength;
+    var max = variableNameLength * 1.5;
+    var diff = max - min;
+    var len = Math.floor(Math.random() * diff + min);
+    
+    while (true)
+    {
+        name = GetRandomString(len, true);
+        
+        if (!IsValidName(name))
+        {
+            console.log("invalid name (should not happen): " + name);
+            continue;
+        }
+        
+        var ok = true;
+        for (var i = 0; i < usedVariableNames.length; ++i)
+        {
+            if (usedVariableNames[i] == name)
+            {
+                ok = false;
+                break;
+            }
+        }
+        
+        if (ok)
+        {
+            usedVariableNames.push(name);
+            return name;
+        }
+    }
+}
+
+function GetIntFromBits(number, i0, i1, i2, i4, i8, i16, i32, i64, i128, i256, i512, i1024, i2048, i4096, i8192, i16384, i32768)
+{
+    if (number == 0)
+        return i0;
+    
+    var ret = [];
+    
+    if (number & 1) ret.push(i1);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i2);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i4);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i8);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i16);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i32);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i64);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i128);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i256);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i512);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i1024);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i2048);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i4096);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i8192);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i16384);
+    
+    number >>= 1;
+    if (number & 1) ret.push(i32768);
+    
+    shuffle(ret);
+    return ret.join("+");
+}
+
+function button()
+{
+    usedVariableNames = [];
+    
+    var text = document.getElementById("text_area").value;
+    
+    var result = "(()=>{var ";
+    
+    var v_number_0 = GetVarName();
+    var v_number_1 = GetVarName();
+    var v_number_2 = GetVarName();
+    var v_number_4 = GetVarName();
+    var v_number_8 = GetVarName();
+    var v_number_16 = GetVarName();
+    var v_number_32 = GetVarName();
+    var v_number_64 = GetVarName();
+    var v_number_128 = GetVarName();
+    var v_number_256 = GetVarName();
+    var v_number_512 = GetVarName();
+    var v_number_1024 = GetVarName();
+    var v_number_2048 = GetVarName();
+    var v_number_4096 = GetVarName();
+    var v_number_8192 = GetVarName();
+    var v_number_16384 = GetVarName();
+    var v_number_32768 = GetVarName();
+    
+    // we generate variables for each letter
+    var letters = {};
+    var requiredLetters = "acCdefghilmnoprsStuv. "; // letters of constructor, pop, eval, return, escape, String.fromCharCode, and a space
+    
+    // we need to find the character with the highest char code, and we only need to generate numbers up until that code
+    var maxCharCode = 127; // we generate numbers for all ascii characters anyways
+    
+    for (var i = 0; i < text.length; ++i)
+    {
+        var ch = text.charCodeAt(i);
+        if (ch in letters)
+            continue;
+        
+        if (maxCharCode < ch)
+            maxCharCode = ch;
+        
+        var variableName = GetVarName();
+        
+        letters[ch] = [variableName + "=" +
+                       GetIntFromBits(ch,
+                       v_number_0, v_number_1, v_number_2, v_number_4, v_number_8, v_number_16, v_number_32,
+                       v_number_64, v_number_128, v_number_256, v_number_512, v_number_1024, v_number_2048,
+                       v_number_4096, v_number_8192, v_number_16384, v_number_32768)
+                      , variableName];
+    }
+        
+    for (var i = 0; i < requiredLetters.length; ++i)
+    {
+        var ch = requiredLetters.charAt(i);
+        var letterIndex = urand(0, 8);
+        var variableName = GetVarName();
+        
+        letters[ch] = [variableName + "='" + GetRandomString(letterIndex) + ch +
+                       RandomElementOf(validChars) + GetRandomString(urand(0, 5)) + "'[" +
+                       GetIntFromBits(letterIndex,
+                       v_number_0, v_number_1, v_number_2, v_number_4, v_number_8, v_number_16, v_number_32,
+                       v_number_64, v_number_128, v_number_256, v_number_512, v_number_1024, v_number_2048,
+                       v_number_4096, v_number_8192, v_number_16384, v_number_32768) + "]"
+                       , variableName];
+    }
+    
+    result += v_number_0 + "='" + GetRandomString() + "'&'" + GetRandomString() + "',";
+    result += v_number_1 + "=-~'" + GetRandomString() + "',";
+    result += v_number_2 + "=" + v_number_1 + "-~'" + GetRandomString() + "',";
+    result += v_number_4 + "=" + v_number_2 + "+" + v_number_2 + ",";
+    result += v_number_8 + "=" + v_number_4 + "*" + v_number_2 + ",";
+    result += v_number_16 + "=" + v_number_2 + "*" + v_number_4 + "*" + v_number_2 + ",";
+    result += v_number_32 + "=" + v_number_8 + "*" + v_number_4 + ",";
+    result += v_number_64 + "=" + v_number_4 + "*" + v_number_16 + ",";
+    
+    if (maxCharCode >= 128)
+        result += v_number_128 + "=" + v_number_8 + "*" + v_number_2 + "*" + v_number_8 + ",";
+    
+    if (maxCharCode >= 256)
+        result += v_number_256 + "=" + v_number_64 + "*" + v_number_4 + ",";
+    
+    if (maxCharCode >= 512)
+        result += v_number_512 + "=" + v_number_8 + "*" + v_number_64 + ",";
+    
+    if (maxCharCode >= 1024)
+        result += v_number_1024 + "=" + v_number_4 + "*" + v_number_256 + ",";
+    
+    if (maxCharCode >= 2048)
+        result += v_number_2048 + "=" + v_number_64 + "*" + v_number_32 + ",";
+    
+    if (maxCharCode >= 4096)
+        result += v_number_4096 + "=" + v_number_256 + "*" + v_number_16 + ",";
+    
+    if (maxCharCode >= 8192)
+        result += v_number_8192 + "=" + v_number_8 + "*" + v_number_1024 + ",";
+    
+    if (maxCharCode >= 16384)
+        result += v_number_16384 + "=" + v_number_32 + "*" + v_number_512 + ",";
+    
+    if (maxCharCode >= 32768)
+        result += v_number_32768 + "=" + v_number_4 + "*" + v_number_8192 + ",";
+    
+    
+    var finalLetters = [];
+    var letterVariableNames = {};
+    for (var i in letters)
+    {
+        finalLetters.push(letters[i][0]);
+        letterVariableNames[i] = letters[i][1];
+    }
+    
+    shuffle(finalLetters);
+    
+    result += finalLetters.join(",") + ",";
+    
+    // now we add []["pop"]["constructor"]("return eval")()(/*eval code here*/)
+    var v_function_eval = GetVarName();
+    result += v_function_eval + "=[][" +
+              letterVariableNames["p"] + "+" +
+              letterVariableNames["o"] + "+" +
+              letterVariableNames["p"] + "][" +
+              letterVariableNames["c"] + "+" +
+              letterVariableNames["o"] + "+" +
+              letterVariableNames["n"] + "+" +
+              letterVariableNames["s"] + "+" +
+              letterVariableNames["t"] + "+" +
+              letterVariableNames["r"] + "+" +
+              letterVariableNames["u"] + "+" +
+              letterVariableNames["c"] + "+" +
+              letterVariableNames["t"] + "+" +
+              letterVariableNames["o"] + "+" +
+              letterVariableNames["r"] + "](" +
+              letterVariableNames["r"] + "+" +
+              letterVariableNames["e"] + "+" +
+              letterVariableNames["t"] + "+" +
+              letterVariableNames["u"] + "+" +
+              letterVariableNames["r"] + "+" +
+              letterVariableNames["n"] + "+" +
+              letterVariableNames[" "] + "+" +
+              letterVariableNames["e"] + "+" +
+              letterVariableNames["v"] + "+" +
+              letterVariableNames["a"] + "+" +
+              letterVariableNames["l"] + ")(),";
+              
+    var v_function_stringFromCharCode = GetVarName();
+    result += v_function_stringFromCharCode + "=" + v_function_eval + "(" +
+              letterVariableNames["S"] + "+" +
+              letterVariableNames["t"] + "+" +
+              letterVariableNames["r"] + "+" +
+              letterVariableNames["i"] + "+" +
+              letterVariableNames["n"] + "+" +
+              letterVariableNames["g"] + "+" +
+              letterVariableNames["."] + "+" +
+              letterVariableNames["f"] + "+" +
+              letterVariableNames["r"] + "+" +
+              letterVariableNames["o"] + "+" +
+              letterVariableNames["m"] + "+" +
+              letterVariableNames["C"] + "+" +
+              letterVariableNames["h"] + "+" +
+              letterVariableNames["a"] + "+" +
+              letterVariableNames["r"] + "+" +
+              letterVariableNames["C"] + "+" +
+              letterVariableNames["o"] + "+" +
+              letterVariableNames["d"] + "+" +
+              letterVariableNames["e"] + ");";
+    
+    result += v_function_eval + "(";
+    
+    // maximum number of function arguments is limited (65535 on chrome), so for long texts, we need to split up the process.
+    // batchCount tells that how many arguments we use for a function call
+    // 4096 should be fine on all browsers
+    const batchCount = 4096;
+    var currentBatchCount = Math.ceil(text.length / batchCount);
+    var batchData = [];
+    var textIndex = 0;
+    for (var i = 0; i < currentBatchCount; ++i)
+    {
+        var currentText = v_function_stringFromCharCode + "(";
+        
+        var finalTextAssembled = [];
+        var target = Math.min(textIndex + batchCount, text.length);
+        
+        for (; textIndex < target; ++textIndex)
+            finalTextAssembled.push(letterVariableNames[text.charCodeAt(textIndex)]);
+        
+        currentText += finalTextAssembled.join(",");
+        currentText += ")";
+        
+        batchData.push(currentText);
+    }
+    result += batchData.join("+");
+    result += ")";
+    result += "})()";
+    document.getElementById("result_text").value = result;
+}
+
+</script>
+
+</body>
+
+</html>
