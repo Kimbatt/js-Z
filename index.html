@@ -18,6 +18,7 @@
             font-size: 20px;
             cursor: pointer;
             transition: 0.15s;
+            outline: none;
         }
         
         button:hover
@@ -99,7 +100,7 @@
 <br />
 <textarea id="result_text" style="height: 350px; margin-top: 5px;" readonly></textarea>
 <br />
-<button onclick="eval(document.getElementById('result_text').value)" style="width: 150px;">Eval this</button>
+<button onclick="try{eval(document.getElementById('result_text').value)}catch(e){alert(e)}" style="width: 150px;">Eval this</button>
 
 <a href="https://github.com/Kimbatt/js-Z" style="position:absolute; width: 32px; height: 32px; top:20px; right:20px;">
 <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="white" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
@@ -120,7 +121,8 @@ function slider_variableLength(e)
     variableNameLength = Number(e.value);
 }
 
-var validChars =
+// unused, contains all characters which are combining / not standalone characters, but most of them cannot be shown together, you'll just see the character not found rectangle ▯ character
+/* var validChars =
 [
     "\u0300", "\u0301", "\u0303", "\u0304", "\u0305", "\u0307", "\u0309", "\u030a",
     "\u030d", "\u030e", "\u030f", "\u0310", "\u0311", "\u0312", "\u0313", "\u0314",
@@ -183,6 +185,9 @@ var validChars =
     "\ufe0e", "\ufe0f",
 ];
 
+shuffle(validChars);
+*/
+
 function shuffle(array)
 {
     var current = array.length;
@@ -211,7 +216,7 @@ function urand(min, max)
 
 function RandomElementOf(array, count)
 {
-    if (count && typeof(count) === "number")
+    if (typeof(count) === "number")
     {
         var ret = "";
         for (var i = 0; i < count; ++i)
@@ -235,8 +240,6 @@ function IsValidName(name)
         return false;
     }
 }
-
-shuffle(validChars);
 
 var zalgoCharsExtended =
 [   
@@ -306,6 +309,46 @@ var zalgo_mid =
     '\u0337', '\u0361'
 ];
 
+var standaloneChars = 
+[
+    "\u13B0", "\u13B1", "\u2C0D", "\u2CB2", 
+    "\u2CBA", "\uA722", "\uA724", "\uA78B", 
+
+    "\u02B9", "\u02BA", "\u02BB", "\u02BC",
+    "\u02BD", "\u02BE", "\u02BF", "\u02C6",
+    "\u02C7", "\u02C8", "\u02C9", "\u02CA",
+    "\u02CB", "\u02CC", "\u02CE", "\u02CF",
+    "\u02D0", "\u02D1", "\u02EC", "\u0374",
+    "\u037A", "\u0559", "\u0640", "\u07F4",
+    "\u07F5", "\u07FA", "\u0971", "\u1843",
+    "\u1C78", "\u1C79", "\u1C7A", "\u1C7B",
+    "\u1C7C", "\u1D54", "\u1D55", "\u2D6F",
+    "\u3035", "\u3033", "\u309D",
+    "\u30FC", "\u30FD", "\u30FE", "\uA4F8",
+    "\uA4F9", "\uA4FA", "\uA4FB", "\uA4FC",
+    "\uA4FD", "\uA67F", "\uA788", "\uFF70",
+    "\uFF9E", "\uFF9F", "\uA9E6",
+    "\u05D9", "\u05D5", "\u0621", "\u0629",
+    "\u0647", "\u06C0", "\u06C1", "\u06C2",
+    "\u06C3", "\u06D5", "\u0715", "\u0716",
+    "\u0718", "\u0719", "\u071A", "\u071D",
+    "\u0722", "\u072A", "\u072F", "\u074D",
+    "\u075A", "\u0765", "\u0766", "\u0780",
+    "\u0789", "\u0799", "\u079A", "\u07D1",
+    "\u07EA", "\u0B83", "\u0B9F", "\u0CF2",
+    "\u0E14", "\u0E15", "\u0E16", "\u0E23",
+    "\u0E27", "\u0E32", "\u0E33", "\u0E40",
+    "\u0E45", "\u0EB0", "\u0EB2",
+    "\u0EC0", "\u0F44", "\u0F4B", "\u0F50",
+    "\u0F54", "\u0F55", "\u0F56", "\u0F66",
+    "\u113C", "\u113E", "\u1173", "\u119E",
+    "\u11A2", "\u141D", "\u141F", "\u1420",
+    "\u1425", "\u1426", "\u1427", "\u1428",
+    "\u1429", "\u1449", "\u144A", "\u14BB",
+    "\u14BC", "\u14BD", "\u14BE", "\u14D0",
+    "\u1508", "\u1540", "\u153E",
+];
+
 var startingChars = 
 [
     "\u02b9", "\u02ba", "\u02bb", "\u02bc", "\u02bd", "\u02be", "\u02bf", "\u02c6",
@@ -366,39 +409,44 @@ function GetRandomString(len, allowLonger)
     
     while (name.length < len)
     {
-        var chance = Math.random() * 100;
-        
-        if (chance < 95)
+        if (zalgoLevel == 0)
         {
-            // add a random number of zalgo characters with a starting character
-            
-            if (Math.random() < 0.1)
-                name += RandomElementOf(justLetters)
-            else
-                name += RandomElementOf(baseChars);
-            
-            var min = zalgoLevel;
-            var max = zalgoLevel * 1.5;
-            var diff = max - min;
-            
-            name += RandomElementOf(zalgo_up, Math.floor(Math.random() * diff + min));
-            name += RandomElementOf(zalgo_mid, Math.floor(Math.random() * diff + min));
-            name += RandomElementOf(zalgo_down, Math.floor(Math.random() * diff + min));
-            continue;
+            name += RandomElementOf(standaloneChars);
         }
         else
         {
-            // add a random extended zalgo character with a starting character
-            name += RandomElementOf(charsThatWorkWithExtendedZalgo);
-            var count = urand(1, 3);
-            var ch = RandomElementOf(zalgoCharsExtended);
-            
-            for (var j = 0; j < count; ++j)
-                name += ch;
-            
-            continue;
+            var chance = Math.random() * 100;
+            //name += standaloneChars[(standaloneChars.length * Math.random())<<0];
+            //continue;
+            if (chance < 90)
+            {
+                // add a random number of zalgo characters with a starting character
+                name += RandomElementOf(baseChars);
+                    
+                var min = zalgoLevel;
+                var max = zalgoLevel * 1.5;
+                var diff = max - min;
+                
+                name += RandomElementOf(zalgo_up, Math.floor(Math.random() * diff + min));
+                name += RandomElementOf(zalgo_mid, Math.floor(Math.random() * diff + min));
+                name += RandomElementOf(zalgo_down, Math.floor(Math.random() * diff + min));
+                continue;
+            }
+            else
+            {
+                // add a random extended zalgo character with a starting character
+                // well, the only character that works and is not a letter is _
+                //name += RandomElementOf(charsThatWorkWithExtendedZalgo);
+                name += "_";
+                var count = urand(zalgoLevel, zalgoLevel * 1.5);
+                var ch = RandomElementOf(zalgoCharsExtended);
+                
+                for (var j = 0; j < count; ++j)
+                    name += ch;
+                
+                continue;
+            }
         }
-        
     }
     
     if (allowLonger === true)
@@ -407,7 +455,7 @@ function GetRandomString(len, allowLonger)
         return name.substr(0, len);
 }
 
-var usedVariableNames = [];
+var usedVariableNames = new Set();
 function GetVarName()
 {
     var name;
@@ -427,19 +475,9 @@ function GetVarName()
             continue;
         }
         
-        var ok = true;
-        for (var i = 0; i < usedVariableNames.length; ++i)
+        if (!usedVariableNames.has(name))
         {
-            if (usedVariableNames[i] == name)
-            {
-                ok = false;
-                break;
-            }
-        }
-        
-        if (ok)
-        {
-            usedVariableNames.push(name);
+            usedVariableNames.add(name);
             return name;
         }
     }
@@ -503,11 +541,25 @@ function GetIntFromBits(number, i0, i1, i2, i4, i8, i16, i32, i64, i128, i256, i
     return ret.join("+");
 }
 
+function ConstructString(variableNames, text)
+{
+    var ret = [];
+    for (var i = 0; i < text.length; ++i)
+        ret.push(variableNames[text[i]]);
+    
+    return ret.join("+");
+}
+
 function button()
 {
-    usedVariableNames = [];
-    
     var text = document.getElementById("text_area").value;
+    if (text === "")
+    {
+        alert("shit's empty, yo");
+        return;
+    }
+    
+    usedVariableNames.clear();
     
     var result = "(()=>{var ";
     
@@ -531,8 +583,6 @@ function button()
     
     // we generate variables for each letter
     var letters = {};
-    var requiredLetters = "acCdefghilmnoprsStuv. "; // letters of constructor, pop, eval, return, escape, String.fromCharCode, and a space
-    
     // we need to find the character with the highest char code, and we only need to generate numbers up until that code
     var maxCharCode = 127; // we generate numbers for all ascii characters anyways
     
@@ -553,21 +603,6 @@ function button()
                        v_number_64, v_number_128, v_number_256, v_number_512, v_number_1024, v_number_2048,
                        v_number_4096, v_number_8192, v_number_16384, v_number_32768)
                       , variableName];
-    }
-        
-    for (var i = 0; i < requiredLetters.length; ++i)
-    {
-        var ch = requiredLetters.charAt(i);
-        var letterIndex = urand(0, 8);
-        var variableName = GetVarName();
-        
-        letters[ch] = [variableName + "='" + GetRandomString(letterIndex) + ch +
-                       RandomElementOf(validChars) + GetRandomString(urand(0, 5)) + "'[" +
-                       GetIntFromBits(letterIndex,
-                       v_number_0, v_number_1, v_number_2, v_number_4, v_number_8, v_number_16, v_number_32,
-                       v_number_64, v_number_128, v_number_256, v_number_512, v_number_1024, v_number_2048,
-                       v_number_4096, v_number_8192, v_number_16384, v_number_32768) + "]"
-                       , variableName];
     }
     
     result += v_number_0 + "='" + GetRandomString() + "'&'" + GetRandomString() + "',";
@@ -606,6 +641,128 @@ function button()
     if (maxCharCode >= 32768)
         result += v_number_32768 + "=" + v_number_4 + "*" + v_number_8192 + ",";
     
+    // "acCdefghilmnoprsStuv. "  <- we need these characters
+    var v_string_false = GetVarName();
+    result += v_string_false + "=!" + v_number_1 + "+'',";
+    
+    // f = "false"[0]
+    var v_char_f = GetVarName();
+    result += v_char_f + "=" + v_string_false + "[" + v_number_0 + "],";
+    
+    var v_string_undefined = GetVarName();
+    result += v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+'',";
+    
+    // a = "false"[1]
+    var v_char_a = GetVarName();
+    result += v_char_a + "=" + v_string_false + "[" + v_number_1 + "],";
+    
+    // l = "false"[2]
+    var v_char_l = GetVarName();
+    result += v_char_l + "=" + v_string_false + "[" + v_number_2 + "],";
+    
+    // s = "false"[3]
+    var v_char_s = GetVarName();
+    result += v_char_s + "=" + v_string_false + "[" + v_number_2 + "+" + v_number_1 + "],";
+    
+    // e = "false"[4]
+    var v_char_e = GetVarName();
+    result  += v_char_e + "=" + v_string_false + "[" + v_number_4 + "],";
+    
+    // i = v_string_undefined[5]
+    var v_char_i = GetVarName();
+    result += v_char_i + "=" + v_string_undefined + "[" + v_number_4 + "+" + v_number_1 + "],";
+    
+    // []["fill"]
+    var v_function_fill = GetVarName();
+    result += v_function_fill + "=[][" + [v_char_f, v_char_i, v_char_l, v_char_l].join("+") + "],";
+    
+    // "function fill() { [native code] }"
+    var v_string_f_fill_native_code = GetVarName();
+    result += v_string_f_fill_native_code + "=" + v_function_fill + "+'',";
+    
+    // c = v_string_f_fill_native_code[3]
+    var v_char_c = GetVarName();
+    result += v_char_c + "=" + v_string_f_fill_native_code + "[" + v_number_2 + "+" + v_number_1 + "],";
+    
+    // u = v_string_f_fill_native_code[1]
+    var v_char_u = GetVarName();
+    result += v_char_u + "=" + v_string_f_fill_native_code + "[" + v_number_1 + "],";
+    
+    // n = v_string_f_fill_native_code[2]
+    var v_char_n = GetVarName();
+    result += v_char_n + "=" + v_string_f_fill_native_code + "[" + v_number_2 + "],";
+    
+    // t = v_string_f_fill_native_code[4]
+    var v_char_t = GetVarName();
+    result += v_char_t + "=" + v_string_f_fill_native_code + "[" + v_number_4 + "],";
+    
+    // o = v_string_f_fill_native_code[6]
+    var v_char_o = GetVarName();
+    result += v_char_o + "=" + v_string_f_fill_native_code + "[" + v_number_4 + "+" + v_number_2 + "],";
+    
+    // space = v_string_f_fill_native_code[8]
+    var v_char_space = GetVarName();
+    result += v_char_space + "=" + v_string_f_fill_native_code + "[" + v_number_8 + "],";
+    
+    // d = "undefined"[2]
+    var v_char_d = GetVarName();
+    result += v_char_d + "=" + v_string_undefined + "[" + v_number_2 + "],";
+    
+    // r = (!0+'')[1]
+    var v_char_r = GetVarName();
+    result += v_char_r + "=(!" + v_number_0 + "+'')[" + v_number_1 + "],";
+    
+    // "constructor"
+    var v_string_constructor = GetVarName();
+    result += v_string_constructor + "=" + [v_char_c, v_char_o, v_char_n, v_char_s, v_char_t, v_char_r, v_char_u, v_char_c, v_char_t, v_char_o, v_char_r, ].join("+") + ",";
+    
+    // "function String() { [native code] }" = ''["constructor"]+''
+    var v_string_function_string = GetVarName();
+    result += v_string_function_string + "=''[" + v_string_constructor + "]+'',";
+    
+    // S = v_string_function_string[9]
+    var v_char_S = GetVarName();
+    result += v_char_S + "=" + v_string_function_string + "[" + v_number_8 + "+" + v_number_1 + "],";
+    
+    // g = v_string_function_string[14]
+    var v_char_g = GetVarName();
+    result += v_char_g + "=" + v_string_function_string + "[" + v_number_8 + "+" + v_number_4 + "+" + v_number_2 + "],";
+    
+    // . = (+("16e32")+'')[1]
+    var v_char_dot = GetVarName();
+    result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+'')[" + v_number_1 + "],";
+    
+    // "toString"
+    var v_string_toString = GetVarName();
+    result += v_string_toString + "=" + [v_char_t, v_char_o, v_char_S, v_char_t, v_char_r, v_char_i, v_char_n, v_char_g].join("+") + ",";
+    
+    // v = (32-1)["toString"](32)
+    var v_char_v = GetVarName();
+    result += v_char_v + "=(" + v_number_32 + "-" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),";
+    
+    // p = (16+8+1)["toString"](32)
+    var v_char_p = GetVarName();
+    result += v_char_p + "=(" + v_number_1 + "+" + v_number_8 + "+" + v_number_16 + ")[" + v_string_toString + "](" + v_number_32 + "),";
+    
+    // []["fill"]["constructor"]("return eval")()
+    var v_function_eval = GetVarName();
+    result += v_function_eval + "=" + v_function_fill + "[" + v_string_constructor + "](" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_v, v_char_a, v_char_l].join("+") + ")(),";
+    
+    // C = eval("escape")("<")[2]
+    var v_char_C = GetVarName();
+    result += v_char_C + "=" + v_function_eval + "(" + [v_char_e, v_char_s, v_char_c, v_char_a, v_char_p, v_char_e].join("+") + ")('<')[" + v_number_2 + "],";
+    
+    // m = (0["constructor"]+'')[11]
+    var v_char_m = GetVarName();
+    result += v_char_m + "=(" + v_number_0 + "[" + v_string_constructor + "]+'')[" + v_number_8 + "+" + v_number_2 + "+" + v_number_1 + "],";
+    
+    // h = (17)["toString"](32)
+    var v_char_h = GetVarName();
+    result += v_char_h + "=(" + v_number_16 + "+" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),";
+    
+    // ''["constructor"]["fromCharCode"]
+    var v_function_stringFromCharCode = GetVarName();
+    result += v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
     
     var finalLetters = [];
     var letterVariableNames = {};
@@ -617,58 +774,7 @@ function button()
     
     shuffle(finalLetters);
     
-    result += finalLetters.join(",") + ",";
-    
-    // now we add []["pop"]["constructor"]("return eval")()(/*eval code here*/)
-    var v_function_eval = GetVarName();
-    result += v_function_eval + "=[][" +
-              letterVariableNames["p"] + "+" +
-              letterVariableNames["o"] + "+" +
-              letterVariableNames["p"] + "][" +
-              letterVariableNames["c"] + "+" +
-              letterVariableNames["o"] + "+" +
-              letterVariableNames["n"] + "+" +
-              letterVariableNames["s"] + "+" +
-              letterVariableNames["t"] + "+" +
-              letterVariableNames["r"] + "+" +
-              letterVariableNames["u"] + "+" +
-              letterVariableNames["c"] + "+" +
-              letterVariableNames["t"] + "+" +
-              letterVariableNames["o"] + "+" +
-              letterVariableNames["r"] + "](" +
-              letterVariableNames["r"] + "+" +
-              letterVariableNames["e"] + "+" +
-              letterVariableNames["t"] + "+" +
-              letterVariableNames["u"] + "+" +
-              letterVariableNames["r"] + "+" +
-              letterVariableNames["n"] + "+" +
-              letterVariableNames[" "] + "+" +
-              letterVariableNames["e"] + "+" +
-              letterVariableNames["v"] + "+" +
-              letterVariableNames["a"] + "+" +
-              letterVariableNames["l"] + ")(),";
-              
-    var v_function_stringFromCharCode = GetVarName();
-    result += v_function_stringFromCharCode + "=" + v_function_eval + "(" +
-              letterVariableNames["S"] + "+" +
-              letterVariableNames["t"] + "+" +
-              letterVariableNames["r"] + "+" +
-              letterVariableNames["i"] + "+" +
-              letterVariableNames["n"] + "+" +
-              letterVariableNames["g"] + "+" +
-              letterVariableNames["."] + "+" +
-              letterVariableNames["f"] + "+" +
-              letterVariableNames["r"] + "+" +
-              letterVariableNames["o"] + "+" +
-              letterVariableNames["m"] + "+" +
-              letterVariableNames["C"] + "+" +
-              letterVariableNames["h"] + "+" +
-              letterVariableNames["a"] + "+" +
-              letterVariableNames["r"] + "+" +
-              letterVariableNames["C"] + "+" +
-              letterVariableNames["o"] + "+" +
-              letterVariableNames["d"] + "+" +
-              letterVariableNames["e"] + ");";
+    result += finalLetters.join(",") + ";";
     
     result += v_function_eval + "(";
     
