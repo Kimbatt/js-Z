@@ -6,13 +6,19 @@
     <title>js-Z</title>
     
     <style>
+        body
+        {
+            background: #484D50;
+            color: white;
+        }
+        
         button
         {
             background-color: #146dff;
             border: none;
             border-radius: 5px;
             color: #ffffff;
-            padding: 12px 15px 12px 15px; /*top right bottom left*/
+            padding: 12px 15px 12px 15px;
             margin: 5px 0px 5px 20px;
             font-family: "Verdana";
             font-size: 20px;
@@ -24,27 +30,12 @@
         button:hover
         {
             background-color: #54adff;
-            border: none;
-            border-radius: 5px;
-            //color: #000000;
-            padding: 12px 15px 12px 15px; /*top right bottom left*/
-            margin: 5px 0px 5px 20px;
-            font-family: "Verdana";
-            font-size: 20px;
             cursor: pointer;
-            transition: 0.15s;
         }
 
         button:disabled
         {
             background-color: #77abff;
-            border: none;
-            border-radius: 5px;
-            color: #ffffff;
-            padding: 12px 15px 12px 15px; /*top right bottom left*/
-            margin: 5px 0px 5px 20px;
-            font-family: "Verdana";
-            font-size: 20px;
             cursor: not-allowed;
         }
         
@@ -55,8 +46,9 @@
             font-size: 20px;
             margin: 20px;
             padding: 10px;
-            width: 90%;
+            width: calc(100% - 65px);
             height: 200px;
+            resize: none;
         }
 
         input
@@ -81,23 +73,31 @@
     </style>
 </head>
 
-<body style="background: #484D50">
+<body>
 
 <div style="padding-top: 10px; padding-left: 20px; font-family: Verdana; font-weight: bold; color: white; font-size: 18px;">Type your Javascript code here:</div>
 <textarea id="text_area">alert(1)</textarea>
 <br />
 <div>
-    <button onclick="button()" style="display: inline-block; vertical-align: bottom; margin-left: 40px; margin-bottom: 18px; margin-right: 20px; font-size: 35px">Fuck shit up</button>
-    <div class="slider-container" style="width: 220px;">
-        <div id="zalgo_level_text" style="padding: 15px; font-family: Verdana; font-size: 20px; font-weight: bold; color: white;">Zalgo level: 3</div>
-        <input type="range" min="0" max="100" value="3" oninput="slider_zalgoLevel(this)" style="margin: 0px 20px 0px 20px; width: 160px;">
+    <button onclick="button()" style="display: inline-block; position: relative; bottom: 22px; vertical-align: bottom; margin-left: 40px; margin-bottom: 18px; margin-right: 20px; font-size: 35px">Fuck shit up</button>
+    <div class="slider-container" style="position: relative; bottom: 22px; height: 100px; margin-left: 20px;">
+        <div style="font-weight: bold; font-size: 20px; margin-right: 10px; margin: 10px;">Charset</div>
+        <select style="font-size: 20px; margin: 10px;" onchange="CharsetChanged(this.value)">
+            <option value="zalgo">Default</option>
+            <option value="space">Invisible characters</option>
+            <option value="i">IIII</option>
+            <option value="lines">Lines and stuff</option>
+        </select>
     </div>
-    <div class="slider-container" style="width: 330px;">
+    <div class="slider-container" id="variable_length_slider_container" style="width: 330px;">
         <div id="variable_name_length_text" style="padding: 15px; font-family: Verdana; font-size: 20px; font-weight: bold; color: white;">Variable name length: 5</div>
         <input type="range" min="3" max="50" value="5" oninput="slider_variableLength(this)" style="margin: 0px 20px 0px 20px; width: 270px;">
     </div>
+    <div class="slider-container" id="zalgo_level_slider_container" style="width: 220px;">
+        <div id="zalgo_level_text" style="padding: 15px; font-family: Verdana; font-size: 20px; font-weight: bold; color: white;">Zalgo level: 3</div>
+        <input type="range" min="0" max="100" value="3" oninput="slider_zalgoLevel(this)" style="margin: 0px 20px 0px 20px; width: 160px;">
+    </div>
 </div>
-<br />
 <textarea id="result_text" style="height: 350px; margin-top: 5px;" readonly></textarea>
 <br />
 <button onclick="try{eval(document.getElementById('result_text').value)}catch(e){alert(e)}" style="width: 150px;">Eval this</button>
@@ -252,11 +252,7 @@ var zalgoCharsExtended =
     "\u0658", "\u065a", "\u065b", "\u065d", "\u065e", "\u065f", "\u0674", "\u06d6",
     "\u06d7", "\u06d8", "\u06d9", "\u06da", "\u06db", "\u06dc", "\u06df", "\u06e0",
     "\u06e1", "\u06e2", "\u06e3", "\u06e4", "\u06e7", "\u06e8", "\u06ea", "\u06eb",
-    "\u06ec", "\u06ed", "\u0711", "\u0730", "\u0731", "\u0733", "\u0734", "\u0735",
-    "\u0736", "\u0737", "\u0738", "\u0739", "\u073a", "\u073b", "\u073c", "\u073d",
-    "\u073e", "\u073f", "\u0743", "\u0744", "\u0745", "\u0746", "\u0747", "\u0748",
-    "\u0749", "\u074a", "\u07eb", "\u07ec", "\u07ed", "\u07ee", "\u07ef", "\u07f0",
-    "\u07f1", "\u07f2", "\u07f3", "\u08e4", "\u08e5", "\u08e6", "\u08e7", "\u08e8",
+    "\u06ec", "\u06ed", "\u08e4", "\u08e5", "\u08e6", "\u08e7", "\u08e8",
     "\u08e9", "\u08f0", "\u08f2", "\u08f3", "\u08f4", "\u08f5", "\u08f6", "\u08f7",
     "\u08f8", "\u08f9", "\u08fa", "\u08fb", "\u08fc", "\u08fd", "\u08fe", "\u0e31",
     "\u0e34", "\u0e35", "\u0e36", "\u0e37", "\u0e38", "\u0e39", "\u0e3a", "\u0e47",
@@ -395,10 +391,94 @@ var charsThatWorkWithExtendedZalgo =
 [
     "_", "o", "I", "x"
 ];
+/*
+var linesLetters = 
+[
+    "\u2C85", "\u2C93", "\u2CD1", "\u2CDF", "\uAB80", "\uAB81", "\uABAE", "\u13B0",
+    "\u13B1", "\u13DE", "\u2C2C", "\u2C84", "\u2CC6", "\u2CD0", "\u0B9F", "\u1100",
+    "\u1102", "\u1161", "\u1165", "\u1175", "\u1198", "\u11A8", "\u11AB", "\u14A3",
+    "\u14A5", "\u14A7", "\u14AA", "\u16C1", "\u16CC", "\u16E7", "\u2D4F", "\u30FF",
+    "\u3131", "\u3134", "\u314F", "\u3153", "\u3163"
+];*/
+
+var linesLetters = 
+[
+    "\u13B1", "\u13DD",
+    "\u13DE", "\u13DF",
+    "\u2C84", "\u2CA4",
+    "\u2CB6", "\u2CBA",
+    "\u2CD0", "\u2CDE",
+    "\uA78B", "\u{10411}",
+    "\u{10415}","\u{1041B}",
+    "\u{10423}","\u{1D5A2}",
+    "\u{1D5A8}","\u{1D5A9}",
+    "\u{1D5AB}","\u{1D5D6}",
+    "\u{1D5DC}","\u{1D5DD}",
+    "\u{1D5DF}","\u{1D758}",
+    "\u{1D75E}","\u{1D763}",
+    "\u2C85", "\u2C93",
+    "\u2CA5", "\u2CB7",
+    "\u2CBB", "\u2CDF",
+    "\uA78C", "\u{10439}",
+    "\u{1043D}","\u{10443}",
+    "\u{1044B}","\u{1D5C5}",
+    "\u{1D5F9}","\uAB81",
+    "\uABAE", "\uABAF",
+    "\u02B9", "\u02BB",
+    "\u02BC", "\u02BD",
+    "\u02C8", "\u02C9",
+    "\u02CA", "\u02CB",
+    "\u02CC", "\u02CD",
+    "\u02CE", "\u02CF",
+    "\u0374", "\u0559",
+    "\u07F4", "\u07F5",
+    "\u1C7B", "\u1C7C",
+    "\uA4F9", "\uA60C",
+    "\uFF70", "\u01C0",
+    "\u01C1", "\u0B9F",
+    "\u1100", "\u1102",
+    "\u115F", "\u1160",
+    "\u1173", "\u1175",
+    "\u119E", "\u11A1",
+    "\u11A8", "\u11AB",
+    "\u11FA", "\u1427",
+    "\u1428", "\u1429",
+    "\u1433", "\u1438",
+    "\u1440", "\u1441",
+    "\u1444", "\u1445",
+    "\u1449", "\u144A",
+    "\u14A3", "\u14A5",
+    "\u14A7", "\u14AA",
+    "\u14AC", "\u14AF",
+    "\u14B2", "\u14B7",
+    "\u1540", "\u167F",
+    "\u16C1", "\u16CC",
+    "\u16E7", "\u18B4",
+    "\u18B5", "\u18B6",
+    "\u18DE", "\u18DF",
+    "\u1963", "\u2D4E",
+    "\u2D4F", "\u30CB",
+    "\u30FF", "\u3127",
+    "\u3131", "\u3134",
+    "\u3137", "\u3161",
+    "\u3163", "\u318D",
+    "\u318E",
+    
+    //"\uFF9E", "\uFF9F",
+    
+];
+
+var iLetters = [ "\u0049", "\u0406", "\u0399" ];
+
+var variableNamesCharset = "zalgo";
+function CharsetChanged(name)
+{
+    variableNamesCharset = name;
+    document.getElementById("zalgo_level_slider_container").style.display = name == "zalgo" ? "" : "none";
+}
 
 function GetRandomString(len, allowLonger)
 {
-    var name = RandomElementOf(startingChars);
     if (len === undefined)
     {
         var min = variableNameLength;
@@ -407,52 +487,81 @@ function GetRandomString(len, allowLonger)
         len = Math.floor(Math.random() * diff + min);
     }
     
-    while (name.length < len)
+    var name = "";
+    switch (variableNamesCharset)
     {
-        if (zalgoLevel == 0)
-        {
-            name += RandomElementOf(standaloneChars);
-        }
-        else
-        {
-            var chance = Math.random() * 100;
-            //name += standaloneChars[(standaloneChars.length * Math.random())<<0];
-            //continue;
-            if (chance < 90)
+        case "zalgo":
+            name = RandomElementOf(startingChars);
+            while (name.length < len)
             {
-                // add a random number of zalgo characters with a starting character
-                name += RandomElementOf(baseChars);
-                    
-                var min = zalgoLevel;
-                var max = zalgoLevel * 1.5;
-                var diff = max - min;
-                
-                name += RandomElementOf(zalgo_up, Math.floor(Math.random() * diff + min));
-                name += RandomElementOf(zalgo_mid, Math.floor(Math.random() * diff + min));
-                name += RandomElementOf(zalgo_down, Math.floor(Math.random() * diff + min));
-                continue;
+                if (zalgoLevel == 0)
+                {
+                    name += RandomElementOf(standaloneChars);
+                }
+                else
+                {
+                    var chance = Math.random() * 100;
+                    //name += standaloneChars[(standaloneChars.length * Math.random())<<0];
+                    //continue;
+                    if (chance < 90)
+                    {
+                        // add a random number of zalgo characters with a starting character
+                        name += RandomElementOf(baseChars);
+                            
+                        var min = zalgoLevel;
+                        var max = zalgoLevel * 1.5;
+                        var diff = max - min;
+                        
+                        name += RandomElementOf(zalgo_up, Math.floor(Math.random() * diff + min));
+                        name += RandomElementOf(zalgo_mid, Math.floor(Math.random() * diff + min));
+                        name += RandomElementOf(zalgo_down, Math.floor(Math.random() * diff + min));
+                        continue;
+                    }
+                    else
+                    {
+                        // add a random extended zalgo character with a starting character
+                        // well, the only character that works and is not a letter is _
+                        //name += RandomElementOf(charsThatWorkWithExtendedZalgo);
+                        name += "_";
+                        var count = urand(zalgoLevel, zalgoLevel * 1.5);
+                        var ch = RandomElementOf(zalgoCharsExtended);
+                        
+                        for (var j = 0; j < count; ++j)
+                            name += ch;
+                        
+                        continue;
+                    }
+                }
             }
-            else
-            {
-                // add a random extended zalgo character with a starting character
-                // well, the only character that works and is not a letter is _
-                //name += RandomElementOf(charsThatWorkWithExtendedZalgo);
-                name += "_";
-                var count = urand(zalgoLevel, zalgoLevel * 1.5);
-                var ch = RandomElementOf(zalgoCharsExtended);
-                
-                for (var j = 0; j < count; ++j)
-                    name += ch;
-                
-                continue;
-            }
-        }
+            break;
+        case "lines":
+            name = RandomElementOf(linesLetters, len);
+            break;
+        case "space":
+            name = "\u02cb";
+            for (var i = 0; i < len; ++i)
+                name += String.fromCharCode(0xfe00 + (Math.random() * 16) | 0);
+            break;
+        case "i":
+            if (len === undefined)
+                len = variableNameLength;
+            
+            name = RandomElementOf(iLetters, len);
+            break;
+        default:
+            alert("unknown charset");
+            throw new Error();
     }
     
-    if (allowLonger === true)
+    if (allowLonger)
         return name;
     else
-        return name.substr(0, len);
+    {
+        if (name.codePointAt(len - 1) > 0xffff)
+            return name.substr(0, len + 1);
+        else
+            return name.substr(0, len);
+    }
 }
 
 var usedVariableNames = new Set();
@@ -465,10 +574,11 @@ function GetVarName()
     var diff = max - min;
     var len = Math.floor(Math.random() * diff + min);
     
+    var breaker = 0;
     while (true)
     {
         name = GetRandomString(len, true);
-        
+        ++breaker;
         if (!IsValidName(name))
         {
             console.log("invalid name (should not happen): " + name);
@@ -479,6 +589,12 @@ function GetVarName()
         {
             usedVariableNames.add(name);
             return name;
+        }
+        
+        if (breaker > 100)
+        {
+            alert("Cannot get a variable name, try increasing the variable name length");
+            throw new Error();
         }
     }
 }
@@ -605,9 +721,9 @@ function button()
                       , variableName];
     }
     
-    result += v_number_0 + "='" + GetRandomString() + "'&'" + GetRandomString() + "',";
-    result += v_number_1 + "=-~'" + GetRandomString() + "',";
-    result += v_number_2 + "=" + v_number_1 + "-~'" + GetRandomString() + "',";
+    result += v_number_0 + "=`" + GetRandomString() + "`&`" + GetRandomString() + "`,";
+    result += v_number_1 + "=-~`" + GetRandomString() + "`,";
+    result += v_number_2 + "=" + v_number_1 + "-~`" + GetRandomString() + "`,";
     result += v_number_4 + "=" + v_number_2 + "+" + v_number_2 + ",";
     result += v_number_8 + "=" + v_number_4 + "*" + v_number_2 + ",";
     result += v_number_16 + "=" + v_number_2 + "*" + v_number_4 + "*" + v_number_2 + ",";
@@ -643,14 +759,14 @@ function button()
     
     // "acCdefghilmnoprsStuv. "  <- we need these characters
     var v_string_false = GetVarName();
-    result += v_string_false + "=!" + v_number_1 + "+'',";
+    result += v_string_false + "=!" + v_number_1 + "+``,";
     
     // f = "false"[0]
     var v_char_f = GetVarName();
     result += v_char_f + "=" + v_string_false + "[" + v_number_0 + "],";
     
     var v_string_undefined = GetVarName();
-    result += v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+'',";
+    result += v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+``,";
     
     // a = "false"[1]
     var v_char_a = GetVarName();
@@ -678,7 +794,7 @@ function button()
     
     // "function fill() { [native code] }"
     var v_string_f_fill_native_code = GetVarName();
-    result += v_string_f_fill_native_code + "=" + v_function_fill + "+'',";
+    result += v_string_f_fill_native_code + "=" + v_function_fill + "+``,";
     
     // c = v_string_f_fill_native_code[3]
     var v_char_c = GetVarName();
@@ -710,7 +826,7 @@ function button()
     
     // r = (!0+'')[1]
     var v_char_r = GetVarName();
-    result += v_char_r + "=(!" + v_number_0 + "+'')[" + v_number_1 + "],";
+    result += v_char_r + "=(!" + v_number_0 + "+``)[" + v_number_1 + "],";
     
     // "constructor"
     var v_string_constructor = GetVarName();
@@ -718,7 +834,7 @@ function button()
     
     // "function String() { [native code] }" = ''["constructor"]+''
     var v_string_function_string = GetVarName();
-    result += v_string_function_string + "=''[" + v_string_constructor + "]+'',";
+    result += v_string_function_string + "=``[" + v_string_constructor + "]+``,";
     
     // S = v_string_function_string[9]
     var v_char_S = GetVarName();
@@ -730,7 +846,7 @@ function button()
     
     // . = (+("16e32")+'')[1]
     var v_char_dot = GetVarName();
-    result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+'')[" + v_number_1 + "],";
+    result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+``)[" + v_number_1 + "],";
     
     // "toString"
     var v_string_toString = GetVarName();
@@ -750,11 +866,11 @@ function button()
     
     // C = eval("escape")("<")[2]
     var v_char_C = GetVarName();
-    result += v_char_C + "=" + v_function_eval + "(" + [v_char_e, v_char_s, v_char_c, v_char_a, v_char_p, v_char_e].join("+") + ")('<')[" + v_number_2 + "],";
+    result += v_char_C + "=" + v_function_eval + "(" + [v_char_e, v_char_s, v_char_c, v_char_a, v_char_p, v_char_e].join("+") + ")(`<`)[" + v_number_2 + "],";
     
     // m = (0["constructor"]+'')[11]
     var v_char_m = GetVarName();
-    result += v_char_m + "=(" + v_number_0 + "[" + v_string_constructor + "]+'')[" + v_number_8 + "+" + v_number_2 + "+" + v_number_1 + "],";
+    result += v_char_m + "=(" + v_number_0 + "[" + v_string_constructor + "]+``)[" + v_number_8 + "+" + v_number_2 + "+" + v_number_1 + "],";
     
     // h = (17)["toString"](32)
     var v_char_h = GetVarName();
@@ -762,7 +878,7 @@ function button()
     
     // ''["constructor"]["fromCharCode"]
     var v_function_stringFromCharCode = GetVarName();
-    result += v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
+    result += v_function_stringFromCharCode + "=``[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
     
     var finalLetters = [];
     var letterVariableNames = {};
@@ -781,16 +897,18 @@ function button()
     // maximum number of function arguments is limited (65535 on chrome), so for long texts, we need to split up the process.
     // batchCount tells that how many arguments we use for a function call
     // 4096 should be fine on all browsers
+    // and also add random count at a time
     const batchCount = 4096;
-    var currentBatchCount = Math.ceil(text.length / batchCount);
+    //var currentBatchCount = Math.ceil(text.length / batchCount);
     var batchData = [];
     var textIndex = 0;
-    for (var i = 0; i < currentBatchCount; ++i)
+    //for (var i = 0; i < currentBatchCount; ++i)
+    while (textIndex < text.length)
     {
         var currentText = v_function_stringFromCharCode + "(";
         
         var finalTextAssembled = [];
-        var target = Math.min(textIndex + batchCount, text.length);
+        var target = Math.min(textIndex + batchCount * (Math.random() * 0.5 + 0.5) | 0, text.length);
         
         for (; textIndex < target; ++textIndex)
             finalTextAssembled.push(letterVariableNames[text.charCodeAt(textIndex)]);
