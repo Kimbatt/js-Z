@@ -8,7 +8,7 @@
     <style>
         body
         {
-            background: #484D50;
+            background: #323639;
             color: white;
         }
         
@@ -41,6 +41,9 @@
         
         textarea
         {
+            color: #ffffff;
+            background: #484D50;
+            border: 1px solid #bbbbbb;
             font-family: "Consolas";
             font-weight: bold;
             font-size: 20px;
@@ -76,18 +79,25 @@
 <body>
 
 <div style="padding-top: 10px; padding-left: 20px; font-family: Verdana; font-weight: bold; color: white; font-size: 18px;">Type your Javascript code here:</div>
-<textarea id="text_area">alert(1)</textarea>
+<textarea id="text_area">alert("asdf1234 🅱")</textarea>
 <br />
 <div>
     <button onclick="button()" style="display: inline-block; position: relative; bottom: 22px; vertical-align: bottom; margin-left: 40px; margin-bottom: 18px; margin-right: 20px; font-size: 35px">Fuck shit up</button>
     <div class="slider-container" style="position: relative; bottom: 22px; height: 100px; margin-left: 20px;">
         <div style="font-weight: bold; font-size: 20px; margin-right: 10px; margin: 10px;">Charset</div>
-        <select style="font-size: 20px; margin: 10px;" onchange="CharsetChanged(this.value)">
-            <option value="zalgo">Default</option>
-            <option value="space">Invisible characters</option>
+        <select id="charset_selector" style="font-size: 20px; margin: 10px;" onchange="CharsetChanged(this.value)">
+            <option id="type_zalgo" value="zalgo">Default</option>
+            <option id="type_space" value="space">Invisible characters</option>
             <option value="i">IIII</option>
             <option value="lines">Lines and stuff</option>
         </select>
+    </div>
+    <div class="slider-container" style="position: relative; bottom: 40px;">
+        <label
+            title="Check this box to generate code that is compatible with older browsers"
+            style="font-weight: bold; font-size: 20px; margin: 10px;">
+            Compatibility mode<input onchange="CompatibilityModeChanged(this.checked)" type="checkbox" style="width: auto; margin: 20px 0px 20px 10px;">
+        </label>
     </div>
     <div class="slider-container" id="variable_length_slider_container" style="width: 330px;">
         <div id="variable_name_length_text" style="padding: 15px; font-family: Verdana; font-size: 20px; font-weight: bold; color: white;">Variable name length: 5</div>
@@ -468,6 +478,30 @@ var linesLetters =
     
 ];
 
+var linesLetters_compatibility = 
+[
+    "\u13b1", "\u13dd", "\u13de", "\u13df",
+    "\u2c84", "\u2ca4", "\u2cb6", "\u2cba",
+    "\u2cd0", "\u2cde", "\ua78b", "\u2c85",
+    "\u2c93", "\u2ca5", "\u2cb7", "\u2cbb",
+    "\u2cdf", "\ua78c", "\u02bb", "\u02bc",
+    "\u02bd", "\u0559", "\u07f4", "\u07f5",
+    "\u1c7b", "\u1c7c", "\ua60c", "\uff70",
+    "\u01c0", "\u01c1", "\u0b9f", "\u1100",
+    "\u1102", "\u115f", "\u1160", "\u1173",
+    "\u1175", "\u119e", "\u11a1", "\u11a8",
+    "\u11ab", "\u1427", "\u1428", "\u1429",
+    "\u1433", "\u1438", "\u1440", "\u1441",
+    "\u1444", "\u1445", "\u1449", "\u144a",
+    "\u14a3", "\u14a5", "\u14a7", "\u14aa",
+    "\u14ac", "\u14af", "\u14b2", "\u14b7",
+    "\u1540", "\u16c1", "\u16cc", "\u16e7",
+    "\u1963", "\u2d4e", "\u2d4f", "\u30cb",
+    "\u30ff", "\u3127", "\u3131", "\u3134",
+    "\u3137", "\u3161", "\u3163", "\u318d",
+    "\u318e"
+];
+
 var iLetters = [ "\u0049", "\u0406", "\u0399" ];
 
 var variableNamesCharset = "zalgo";
@@ -477,8 +511,34 @@ function CharsetChanged(name)
     document.getElementById("zalgo_level_slider_container").style.display = name == "zalgo" ? "" : "none";
 }
 
+var isCompatibilityMode = false;
+function CompatibilityModeChanged(on)
+{
+    document.getElementById("type_zalgo").disabled = on;
+    document.getElementById("type_space").disabled = on;
+
+    if (on)
+    {
+        var selector = document.getElementById("charset_selector");
+        var selectedValue = selector.value;
+        if (selectedValue == "zalgo" || selectedValue == "space")
+        {
+            selector.value = "i";
+            CharsetChanged("i");
+        }
+    }
+
+    isCompatibilityMode = on;
+}
+
+var debugVarIndex = 0;
+var debuggingVarNames = false;
+
 function GetRandomString(len, allowLonger)
 {
+    if (debuggingVarNames)
+        return "a_" + (debugVarIndex++);
+
     if (len === undefined)
     {
         var min = variableNameLength;
@@ -535,7 +595,7 @@ function GetRandomString(len, allowLonger)
             }
             break;
         case "lines":
-            name = RandomElementOf(linesLetters, len);
+            name = RandomElementOf(isCompatibilityMode ? linesLetters_compatibility : linesLetters, len);
             break;
         case "space":
             name = "\u02cb";
@@ -677,7 +737,7 @@ function button()
     
     usedVariableNames.clear();
     
-    var result = "(()=>{var ";
+    var result = "(" + (isCompatibilityMode ? "function()" : "()=>") + "{var ";
     
     var v_number_0 = GetVarName();
     var v_number_1 = GetVarName();
@@ -721,9 +781,9 @@ function button()
                       , variableName];
     }
     
-    result += v_number_0 + "=`" + GetRandomString() + "`&`" + GetRandomString() + "`,";
-    result += v_number_1 + "=-~`" + GetRandomString() + "`,";
-    result += v_number_2 + "=" + v_number_1 + "-~`" + GetRandomString() + "`,";
+    result += v_number_0 + "='" + GetRandomString() + "'&'" + GetRandomString() + "',";
+    result += v_number_1 + "=-~'" + GetRandomString() + "',";
+    result += v_number_2 + "=" + v_number_1 + "-~'" + GetRandomString() + "',";
     result += v_number_4 + "=" + v_number_2 + "+" + v_number_2 + ",";
     result += v_number_8 + "=" + v_number_4 + "*" + v_number_2 + ",";
     result += v_number_16 + "=" + v_number_2 + "*" + v_number_4 + "*" + v_number_2 + ",";
@@ -759,14 +819,15 @@ function button()
     
     // "acCdefghilmnoprsStuv. "  <- we need these characters
     var v_string_false = GetVarName();
-    result += v_string_false + "=!" + v_number_1 + "+``,";
+    result += v_string_false + "=!" + v_number_1 + "+'',";
     
     // f = "false"[0]
     var v_char_f = GetVarName();
     result += v_char_f + "=" + v_string_false + "[" + v_number_0 + "],";
     
+    // "undefined"
     var v_string_undefined = GetVarName();
-    result += v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+``,";
+    result += v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+'',";
     
     // a = "false"[1]
     var v_char_a = GetVarName();
@@ -784,41 +845,41 @@ function button()
     var v_char_e = GetVarName();
     result  += v_char_e + "=" + v_string_false + "[" + v_number_4 + "],";
     
-    // i = v_string_undefined[5]
+    // i = "undefined"[5]
     var v_char_i = GetVarName();
     result += v_char_i + "=" + v_string_undefined + "[" + v_number_4 + "+" + v_number_1 + "],";
     
-    // []["fill"]
-    var v_function_fill = GetVarName();
-    result += v_function_fill + "=[][" + [v_char_f, v_char_i, v_char_l, v_char_l].join("+") + "],";
+    // "[object Object]"
+    var v_string_object_object = GetVarName();
+    result += v_string_object_object + "=[]+{},";
     
-    // "function fill() { [native code] }"
-    var v_string_f_fill_native_code = GetVarName();
-    result += v_string_f_fill_native_code + "=" + v_function_fill + "+``,";
-    
-    // c = v_string_f_fill_native_code[3]
+    // c = "[object Object]"[5]
     var v_char_c = GetVarName();
-    result += v_char_c + "=" + v_string_f_fill_native_code + "[" + v_number_2 + "+" + v_number_1 + "],";
+    result += v_char_c + "=" + v_string_object_object + "[" + v_number_4 + "+" + v_number_1 + "],";
+
+    // b = "[object Object]"[2]
+    var v_char_b = GetVarName();
+    result += v_char_b + "=" + v_string_object_object + "[" + v_number_2 + "],"
     
-    // u = v_string_f_fill_native_code[1]
+    // u = "undefined"[0]
     var v_char_u = GetVarName();
-    result += v_char_u + "=" + v_string_f_fill_native_code + "[" + v_number_1 + "],";
+    result += v_char_u + "=" + v_string_undefined + "[" + v_number_0 + "],";
     
-    // n = v_string_f_fill_native_code[2]
+    // n = "undefined"[1]
     var v_char_n = GetVarName();
-    result += v_char_n + "=" + v_string_f_fill_native_code + "[" + v_number_2 + "],";
+    result += v_char_n + "=" + v_string_undefined + "[" + v_number_1 + "],";
     
-    // t = v_string_f_fill_native_code[4]
+    // t = (!0+'')[0]
     var v_char_t = GetVarName();
-    result += v_char_t + "=" + v_string_f_fill_native_code + "[" + v_number_4 + "],";
+    result += v_char_t + "=(!" + v_number_0 + "+'')[" + v_number_0 + "],";
     
-    // o = v_string_f_fill_native_code[6]
+    // o = "[object Object]"[1]
     var v_char_o = GetVarName();
-    result += v_char_o + "=" + v_string_f_fill_native_code + "[" + v_number_4 + "+" + v_number_2 + "],";
+    result += v_char_o + "=" + v_string_object_object + "[" + v_number_1 + "],";
     
-    // space = v_string_f_fill_native_code[8]
+    // space = "[object Object]"[7]
     var v_char_space = GetVarName();
-    result += v_char_space + "=" + v_string_f_fill_native_code + "[" + v_number_8 + "],";
+    result += v_char_space + "=" + v_string_object_object + "[" + v_number_8 + "-" + v_number_1 + "],";
     
     // d = "undefined"[2]
     var v_char_d = GetVarName();
@@ -826,27 +887,31 @@ function button()
     
     // r = (!0+'')[1]
     var v_char_r = GetVarName();
-    result += v_char_r + "=(!" + v_number_0 + "+``)[" + v_number_1 + "],";
+    result += v_char_r + "=(!" + v_number_0 + "+'')[" + v_number_1 + "],";
     
     // "constructor"
     var v_string_constructor = GetVarName();
     result += v_string_constructor + "=" + [v_char_c, v_char_o, v_char_n, v_char_s, v_char_t, v_char_r, v_char_u, v_char_c, v_char_t, v_char_o, v_char_r, ].join("+") + ",";
     
-    // "function String() { [native code] }" = ''["constructor"]+''
-    var v_string_function_string = GetVarName();
-    result += v_string_function_string + "=``[" + v_string_constructor + "]+``,";
-    
-    // S = v_string_function_string[9]
+    // []["filter"]
+    var v_function_filter = GetVarName();
+    result += v_function_filter + "=[][" + [v_char_f, v_char_i, v_char_l, v_char_t, v_char_e, v_char_r].join("+") + "],";
+
+    // []["filter"]["constructor"]("return btoa")()
+    var v_function_btoa = GetVarName();
+    result += v_function_btoa + "=" + v_function_filter + "[" + v_string_constructor + "](" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_b, v_char_t, v_char_o, v_char_a].join("+") + ")(),";
+
+    // S = btoa("a ")[1]
     var v_char_S = GetVarName();
-    result += v_char_S + "=" + v_string_function_string + "[" + v_number_8 + "+" + v_number_1 + "],";
+    result += v_char_S + "=" + v_function_btoa + "(" + v_char_a + "+" + v_char_space + ")[" + v_number_1 + "],";
     
-    // g = v_string_function_string[14]
+    // g = btoa("b")[1]
     var v_char_g = GetVarName();
-    result += v_char_g + "=" + v_string_function_string + "[" + v_number_8 + "+" + v_number_4 + "+" + v_number_2 + "],";
+    result += v_char_g + "=" + v_function_btoa + "(" + v_char_b + ")[" + v_number_1 + "],";
     
     // . = (+("16e32")+'')[1]
     var v_char_dot = GetVarName();
-    result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+``)[" + v_number_1 + "],";
+    result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+'')[" + v_number_1 + "],";
     
     // "toString"
     var v_string_toString = GetVarName();
@@ -860,17 +925,17 @@ function button()
     var v_char_p = GetVarName();
     result += v_char_p + "=(" + v_number_1 + "+" + v_number_8 + "+" + v_number_16 + ")[" + v_string_toString + "](" + v_number_32 + "),";
     
-    // []["fill"]["constructor"]("return eval")()
+    // []["filter"]["constructor"]("return eval")()
     var v_function_eval = GetVarName();
-    result += v_function_eval + "=" + v_function_fill + "[" + v_string_constructor + "](" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_v, v_char_a, v_char_l].join("+") + ")(),";
+    result += v_function_eval + "=" + v_function_filter + "[" + v_string_constructor + "](" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_v, v_char_a, v_char_l].join("+") + ")(),";
     
     // C = eval("escape")("<")[2]
     var v_char_C = GetVarName();
-    result += v_char_C + "=" + v_function_eval + "(" + [v_char_e, v_char_s, v_char_c, v_char_a, v_char_p, v_char_e].join("+") + ")(`<`)[" + v_number_2 + "],";
+    result += v_char_C + "=" + v_function_eval + "(" + [v_char_e, v_char_s, v_char_c, v_char_a, v_char_p, v_char_e].join("+") + ")('<')[" + v_number_2 + "],";
     
-    // m = (0["constructor"]+'')[11]
+    // m = btoa("ba")[1]
     var v_char_m = GetVarName();
-    result += v_char_m + "=(" + v_number_0 + "[" + v_string_constructor + "]+``)[" + v_number_8 + "+" + v_number_2 + "+" + v_number_1 + "],";
+    result += v_char_m + "=" + v_function_btoa + "(" + v_char_b + "+" + v_char_a + ")[" + v_number_1 + "],";
     
     // h = (17)["toString"](32)
     var v_char_h = GetVarName();
@@ -878,7 +943,7 @@ function button()
     
     // ''["constructor"]["fromCharCode"]
     var v_function_stringFromCharCode = GetVarName();
-    result += v_function_stringFromCharCode + "=``[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
+    result += v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
     
     var finalLetters = [];
     var letterVariableNames = {};
@@ -892,7 +957,7 @@ function button()
     
     result += finalLetters.join(",") + ";";
     
-    result += v_function_eval + "(";
+    result += "[][" + v_string_constructor + "][" + v_string_constructor + "](";
     
     // maximum number of function arguments is limited (65535 on chrome), so for long texts, we need to split up the process.
     // batchCount tells that how many arguments we use for a function call
@@ -919,7 +984,7 @@ function button()
         batchData.push(currentText);
     }
     result += batchData.join("+");
-    result += ")";
+    result += ")()";
     result += "})()";
     document.getElementById("result_text").value = result;
 }
