@@ -554,7 +554,7 @@ function GetRandomString(len, allowLonger)
             name = RandomElementOf(startingChars);
             while (name.length < len)
             {
-                if (zalgoLevel == 0)
+                if (zalgoLevel === 0)
                 {
                     name += RandomElementOf(standaloneChars);
                 }
@@ -661,7 +661,7 @@ function GetVarName()
 
 function GetIntFromBits(number, i0, i1, i2, i4, i8, i16, i32, i64, i128, i256, i512, i1024, i2048, i4096, i8192, i16384, i32768)
 {
-    if (number == 0)
+    if (number === 0)
         return i0;
     
     var ret = [];
@@ -818,16 +818,18 @@ function button()
         result += v_number_32768 + "=" + v_number_4 + "*" + v_number_8192 + ",";
     
     // "acCdefghilmnoprsStuv. "  <- we need these characters
+
+    // "false" = !1+[]
     var v_string_false = GetVarName();
-    result += v_string_false + "=!" + v_number_1 + "+'',";
+    result += v_string_false + "=!" + v_number_1 + "+[],";
     
     // f = "false"[0]
     var v_char_f = GetVarName();
     result += v_char_f + "=" + v_string_false + "[" + v_number_0 + "],";
     
-    // "undefined"
+    // "undefined" = "f"[1]+[]
     var v_string_undefined = GetVarName();
-    result += v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+'',";
+    result += v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+[],";
     
     // a = "false"[1]
     var v_char_a = GetVarName();
@@ -869,9 +871,9 @@ function button()
     var v_char_n = GetVarName();
     result += v_char_n + "=" + v_string_undefined + "[" + v_number_1 + "],";
     
-    // t = (!0+'')[0]
+    // t = (!0+[])[0]
     var v_char_t = GetVarName();
-    result += v_char_t + "=(!" + v_number_0 + "+'')[" + v_number_0 + "],";
+    result += v_char_t + "=(!" + v_number_0 + "+[])[" + v_number_0 + "],";
     
     // o = "[object Object]"[1]
     var v_char_o = GetVarName();
@@ -885,9 +887,9 @@ function button()
     var v_char_d = GetVarName();
     result += v_char_d + "=" + v_string_undefined + "[" + v_number_2 + "],";
     
-    // r = (!0+'')[1]
+    // r = (!0+[])[1]
     var v_char_r = GetVarName();
-    result += v_char_r + "=(!" + v_number_0 + "+'')[" + v_number_1 + "],";
+    result += v_char_r + "=(!" + v_number_0 + "+[])[" + v_number_1 + "],";
     
     // "constructor"
     var v_string_constructor = GetVarName();
@@ -909,9 +911,9 @@ function button()
     var v_char_g = GetVarName();
     result += v_char_g + "=" + v_function_btoa + "(" + v_char_b + ")[" + v_number_1 + "],";
     
-    // . = (+("16e32")+'')[1]
+    // . = (+("16e32")+[])[1]
     var v_char_dot = GetVarName();
-    result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+'')[" + v_number_1 + "],";
+    result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+[])[" + v_number_1 + "],";
     
     // "toString"
     var v_string_toString = GetVarName();
@@ -929,9 +931,9 @@ function button()
     var v_function_eval = GetVarName();
     result += v_function_eval + "=" + v_function_filter + "[" + v_string_constructor + "](" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_v, v_char_a, v_char_l].join("+") + ")(),";
     
-    // C = eval("escape")("<")[2]
+    // S = btoa("d ")[1]
     var v_char_C = GetVarName();
-    result += v_char_C + "=" + v_function_eval + "(" + [v_char_e, v_char_s, v_char_c, v_char_a, v_char_p, v_char_e].join("+") + ")('<')[" + v_number_2 + "],";
+    result += v_char_C + "=" + v_function_btoa + "(" + v_char_d + "+" + v_char_space + ")[" + v_number_1 + "],";
     
     // m = btoa("ba")[1]
     var v_char_m = GetVarName();
