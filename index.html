@@ -93,7 +93,7 @@
         <div class="slider-container" style="position: relative; bottom: 22px; height: 100px; margin-left: 20px;">
             <div style="font-weight: bold; font-size: 20px; margin-right: 10px; margin: 10px;">Charset</div>
             <select id="charset_selector" style="font-size: 20px; margin: 10px;" onchange="CharsetChanged(this.value)">
-                <option id="type_zalgo" value="zalgo">Default</option>
+                <option id="type_zalgo" value="zalgo">Zalgo</option>
                 <option id="type_space" value="space">Invisible characters</option>
                 <option value="i">IIII</option>
                 <option value="lines">Lines and stuff</option>
@@ -121,6 +121,7 @@
     <textarea id="result_text" style="height: 350px; margin-top: 5px;" readonly></textarea>
     <br />
     <button onclick="try{eval(document.getElementById('result_text').value)}catch(e){alert(e)}" style="width: 150px;">Eval this</button>
+    <button onclick="CopyResult(this)" onmouseleave="this.innerText='Copy this'" style="width: 150px;">Copy this</button>
 </div>
 <div id="customize_page" style="display: none;">
     <div style="padding-top: 10px; padding-left: 20px; font-weight: bold; color: white; font-size: 18px;">Enter characters to use:<br>(enter a character more than once to increase its chance to appear)</div>
@@ -133,6 +134,11 @@
 <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="white" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
 
 <script>
+function CopyResult(button)
+{
+    button.innerText = "Copied!";
+    navigator.clipboard.writeText(document.getElementById('result_text').value);
+}
 
 let zalgoLevel = 3;
 function slider_zalgoLevel(e)
@@ -550,6 +556,9 @@ function CheckCustomCharacters()
     {
         const char = characters[i];
 
+        if (char === "\n")
+            continue;
+
         if (char === " " || char === ";")
         {
             invalidChars.add(char === " " ? " space" : char);
@@ -655,6 +664,7 @@ function GetRandomString(len, allowLonger)
     if (debuggingVarNames)
         return "a_" + (debugVarIndex++);
 
+    const allowLongerName = (variableNamesCharset === "zalgo");
     if (len === undefined)
     {
         const min = variableNameLength;
@@ -753,14 +763,21 @@ function GetVarName()
 {
     let name;
     
-    const min = variableNameLength;
-    const max = variableNameLength * 1.5;
-    const len = Math.floor(Math.random() * (max - min) + min);
-    
+    const allowLongerName = (variableNamesCharset === "zalgo");
+    let len;
+    if (allowLongerName)
+    {
+        const min = variableNameLength;
+        const max = variableNameLength * 1.5;
+        len = Math.floor(Math.random() * (max - min) + min);
+    }
+    else
+        len = variableNameLength;
+
     let breaker = 0;
     while (true)
     {
-        name = GetRandomString(len, true);
+        name = GetRandomString(len, allowLongerName);
         ++breaker;
         if (!IsValidName(name))
         {
@@ -908,9 +925,11 @@ function button()
                       , variableName];
     }
     
-    result += v_number_0 + "='" + GetRandomString() + "'&'" + GetRandomString() + "',";
-    result += v_number_1 + "=-~'" + GetRandomString() + "',";
-    result += v_number_2 + "=" + v_number_1 + "-~'" + GetRandomString() + "',";
+    const allowLongerName = (variableNamesCharset === "zalgo");
+
+    result += v_number_0 + "='" + GetRandomString(variableNameLength, allowLongerName) + "'&'" + GetRandomString(variableNameLength, allowLongerName) + "',";
+    result += v_number_1 + "=-~'" + GetRandomString(variableNameLength, allowLongerName) + "',";
+    result += v_number_2 + "=" + v_number_1 + "-~'" + GetRandomString(variableNameLength, false) + "',";
     result += v_number_4 + "=" + v_number_2 + "+" + v_number_2 + ",";
     result += v_number_8 + "=" + v_number_4 + "*" + v_number_2 + ",";
     result += v_number_16 + "=" + v_number_2 + "*" + v_number_4 + "*" + v_number_2 + ",";
