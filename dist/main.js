@@ -1,30 +1,22 @@
-
-function CopyResult(button)
-{
+"use strict";
+function CopyResult(button) {
     button.innerText = "Copied!";
     navigator.clipboard.writeText(document.getElementById('result_text').value);
 }
-
 let zalgoLevel = 3;
-function slider_zalgoLevel(e)
-{
-    document.getElementById("zalgo_level_text").innerHTML = "Zalgo level: " + e.value;
+function slider_zalgoLevel(e) {
+    document.getElementById("zalgo_level_text").textContent = "Zalgo level: " + e.value;
     zalgoLevel = Number(e.value);
 }
-
 let variableNameLength = 5;
-function slider_variableLength(e)
-{
-    document.getElementById("variable_name_length_text").innerHTML = "Variable name length: " + e.value;
+function slider_variableLength(e) {
+    document.getElementById("variable_name_length_text").textContent = "Variable name length: " + e.value;
     variableNameLength = Number(e.value);
 }
-
-function ShowOptions(show)
-{
+function ShowOptions(show) {
     document.getElementById("options_overlay").style.display = show ? "flex" : "none";
     document.getElementById("main_page").style.filter = show ? "blur(3px)" : "";
 }
-
 // unused, contains all characters which are combining / not standalone characters, but most of them cannot be shown together, you'll just see the character not found rectangle ▯ character
 /* const validChars =
 [
@@ -91,61 +83,42 @@ function ShowOptions(show)
 
 shuffle(validChars);
 */
-
-function shuffle(array)
-{
+function shuffle(array) {
     let current = array.length;
     let temp;
     let rand;
-
-    while (current !== 0)
-    {
+    while (current !== 0) {
         rand = Math.floor(Math.random() * current);
         --current;
-
         temp = array[current];
         array[current] = array[rand];
         array[rand] = temp;
     }
 }
-
-function urand(min, max)
-{
+function urand(min, max) {
     if (max === undefined)
         return Math.floor(Math.random() * min);
-    
     return Math.floor(Math.random() * max - min) + min;
 }
-
-function RandomElementOf(array, count)
-{
-    if (typeof(count) === "number")
-    {
-        let ret = "";
-        for (let i = 0; i < count; ++i)
-            ret += array[urand(array.length)];
-        
-        return ret;
-    }
-    else
-        return array[urand(array.length)];
+function RandomElementsOfStringArray(array, count) {
+    let ret = "";
+    for (let i = 0; i < count; ++i)
+        ret += array[urand(array.length)];
+    return ret;
 }
-
-function IsValidName(name)
-{
-    try
-    {
+function RandomElementOf(array) {
+    return array[urand(array.length)];
+}
+function IsValidName(name) {
+    try {
         eval("var " + name);
         return true;
     }
-    catch (e)
-    {
+    catch (e) {
         return false;
     }
 }
-
-const zalgoCharsExtended =
-[   
+const zalgoCharsExtended = [
     "\u08f1", "\u0363", "\u0364", "\u0365", "\u0366", "\u0367", "\u0368", "\u0369",
     "\u036a", "\u036b", "\u036c", "\u036d", "\u036e", "\u036f", "\u0483", "\u0484",
     "\u0485", "\u0486", "\u0593", "\u0594", "\u0595", "\u0597", "\u0598", "\u059c",
@@ -165,54 +138,45 @@ const zalgoCharsExtended =
     "\u1dc6", "\u1dc7", "\u1dc8", "\u1dc9", "\u1dca", "\u1dfe", "\u1dff", "\ufb1e",
     "\ufc5e", "\ufc5f", "\ufc60", "\ufc61", "\ufc62", "\ufc63"
 ];
-
 // stolen from http://eeemo.net/
-const zalgo_up =
-[
-    '\u030d', '\u030e', '\u0304', '\u0305', 
-    '\u033f', '\u0311', '\u0306', '\u0310', 
-    '\u0352', '\u0357', '\u0351', '\u0307', 
-    '\u0308', '\u030a', '\u0342', '\u0343', 
-    '\u0344', '\u034a', '\u034b', '\u034c', 
-    '\u0303', '\u0302', '\u030c', '\u0350', 
-    '\u0300', '\u0301', '\u030b', '\u030f', 
-    '\u0312', '\u0313', '\u0314', '\u033d', 
-    '\u0309', '\u0363', '\u0364', '\u0365', 
-    '\u0366', '\u0367', '\u0368', '\u0369', 
-    '\u036a', '\u036b', '\u036c', '\u036d', 
-    '\u036e', '\u036f', '\u033e', '\u035b', 
+const zalgo_up = [
+    '\u030d', '\u030e', '\u0304', '\u0305',
+    '\u033f', '\u0311', '\u0306', '\u0310',
+    '\u0352', '\u0357', '\u0351', '\u0307',
+    '\u0308', '\u030a', '\u0342', '\u0343',
+    '\u0344', '\u034a', '\u034b', '\u034c',
+    '\u0303', '\u0302', '\u030c', '\u0350',
+    '\u0300', '\u0301', '\u030b', '\u030f',
+    '\u0312', '\u0313', '\u0314', '\u033d',
+    '\u0309', '\u0363', '\u0364', '\u0365',
+    '\u0366', '\u0367', '\u0368', '\u0369',
+    '\u036a', '\u036b', '\u036c', '\u036d',
+    '\u036e', '\u036f', '\u033e', '\u035b',
     '\u0346', '\u031a'
 ];
-
-const zalgo_down =
-[
-    '\u0316', '\u0317', '\u0318', '\u0319', 
-    '\u031c', '\u031d', '\u031e', '\u031f', 
-    '\u0320', '\u0324', '\u0325', '\u0326', 
-    '\u0329', '\u032a', '\u032b', '\u032c', 
-    '\u032d', '\u032e', '\u032f', '\u0330', 
-    '\u0331', '\u0332', '\u0333', '\u0339', 
-    '\u033a', '\u033b', '\u033c', '\u0345', 
-    '\u0347', '\u0348', '\u0349', '\u034d', 
-    '\u034e', '\u0353', '\u0354', '\u0355', 
+const zalgo_down = [
+    '\u0316', '\u0317', '\u0318', '\u0319',
+    '\u031c', '\u031d', '\u031e', '\u031f',
+    '\u0320', '\u0324', '\u0325', '\u0326',
+    '\u0329', '\u032a', '\u032b', '\u032c',
+    '\u032d', '\u032e', '\u032f', '\u0330',
+    '\u0331', '\u0332', '\u0333', '\u0339',
+    '\u033a', '\u033b', '\u033c', '\u0345',
+    '\u0347', '\u0348', '\u0349', '\u034d',
+    '\u034e', '\u0353', '\u0354', '\u0355',
     '\u0356', '\u0359', '\u035a', '\u0323'
 ];
-
-const zalgo_mid =
-[
-    '\u0315', '\u031b', '\u0340', '\u0341', 
-    '\u0358', '\u0321', '\u0322', '\u0327', 
-    '\u0328', '\u0334', '\u0335', '\u0336', 
-    '\u034f', '\u035c', '\u035d', '\u035e', 
-    '\u035f', '\u0360', '\u0362', '\u0338', 
+const zalgo_mid = [
+    '\u0315', '\u031b', '\u0340', '\u0341',
+    '\u0358', '\u0321', '\u0322', '\u0327',
+    '\u0328', '\u0334', '\u0335', '\u0336',
+    '\u034f', '\u035c', '\u035d', '\u035e',
+    '\u035f', '\u0360', '\u0362', '\u0338',
     '\u0337', '\u0361'
 ];
-
-const standaloneChars = 
-[
-    "\u13B0", "\u13B1", "\u2C0D", "\u2CB2", 
-    "\u2CBA", "\uA722", "\uA724", "\uA78B", 
-
+const standaloneChars = [
+    "\u13B0", "\u13B1", "\u2C0D", "\u2CB2",
+    "\u2CBA", "\uA722", "\uA724", "\uA78B",
     "\u02B9", "\u02BA", "\u02BB", "\u02BC",
     "\u02BD", "\u02BE", "\u02BF", "\u02C6",
     "\u02C7", "\u02C8", "\u02C9", "\u02CA",
@@ -247,9 +211,7 @@ const standaloneChars =
     "\u14BC", "\u14BD", "\u14BE", "\u14D0",
     "\u1508", "\u1540", "\u153E",
 ];
-
-const startingChars = 
-[
+const startingChars = [
     "\u02b9", "\u02ba", "\u02bb", "\u02bc", "\u02bd", "\u02be", "\u02bf", "\u02c6",
     "\u02c7", "\u02c8", "\u02cc", "\u02d1", "\u0374", "\u037a", "\u0559", "\u1843",
     "\u1c78", "\u1c79", "\u1c7a", "\u1c7c", "\u1d54", "\u1d55", "\u1da5",
@@ -270,32 +232,25 @@ const startingChars =
     "\u18a6", "\u18d9", "\u18da", "\u18de", "\u18df", "\u2d30", "\u2d3e", "\u2d42",
     "\u2d46", "\u2d48", "\u2d53", "\u2d57", "\u318d", "\u31b4", "\u31b5", "\u31b6"
 ];
-
 shuffle(startingChars);
-
-const baseChars = 
-[
+const baseChars = [
     "\u02b9", "\u02ba", "\u02bb", "\u02bc", "\u02bd", "\u02be", "\u02bf", "\u02c6",
     "\u02c7", "\u02c8", "\u02cc", "\u02d1", "\u0374", "\u037a", "\u0559", "\u1d54",
     "\u1d55", "\u1da5", "\ua4f8", "\ua4f9", "\ua4fa", "\ua4fb", "\ua4fc", "\ua4fd",
     "\ua67f", "\ua717", "\ua718", "\ua719", "\ua71a", "\ua788", "\u05d9", "\u0621",
     "\u0627", "\u0674", "\u06c0", "\u06c1", "\u06c2", "\u06c3", "\u06d5", "\u03b3"
 ];
-
-const justLetters =
-[
+const justLetters = [
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
     "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A", "B", "C", "D", "E", "F",
     "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
     "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
 ];
-
-const charsThatWorkWithExtendedZalgo =
-[
+const charsThatWorkWithExtendedZalgo = [
     "_", "o", "I", "x"
 ];
 /*
-const linesLetters = 
+const linesLetters =
 [
     "\u2C85", "\u2C93", "\u2CD1", "\u2CDF", "\uAB80", "\uAB81", "\uABAE", "\u13B0",
     "\u13B1", "\u13DE", "\u2C2C", "\u2C84", "\u2CC6", "\u2CD0", "\u0B9F", "\u1100",
@@ -303,29 +258,27 @@ const linesLetters =
     "\u14A5", "\u14A7", "\u14AA", "\u16C1", "\u16CC", "\u16E7", "\u2D4F", "\u30FF",
     "\u3131", "\u3134", "\u314F", "\u3153", "\u3163"
 ];*/
-
-const linesLetters = 
-[
+const linesLetters = [
     "\u13B1", "\u13DD",
     "\u13DE", "\u13DF",
     "\u2C84", "\u2CA4",
     "\u2CB6", "\u2CBA",
     "\u2CD0", "\u2CDE",
     "\uA78B", "\u{10411}",
-    "\u{10415}","\u{1041B}",
-    "\u{10423}","\u{1D5A2}",
-    "\u{1D5A8}","\u{1D5A9}",
-    "\u{1D5AB}","\u{1D5D6}",
-    "\u{1D5DC}","\u{1D5DD}",
-    "\u{1D5DF}","\u{1D758}",
-    "\u{1D75E}","\u{1D763}",
+    "\u{10415}", "\u{1041B}",
+    "\u{10423}", "\u{1D5A2}",
+    "\u{1D5A8}", "\u{1D5A9}",
+    "\u{1D5AB}", "\u{1D5D6}",
+    "\u{1D5DC}", "\u{1D5DD}",
+    "\u{1D5DF}", "\u{1D758}",
+    "\u{1D75E}", "\u{1D763}",
     "\u2C85", "\u2C93",
     "\u2CA5", "\u2CB7",
     "\u2CBB", "\u2CDF",
     "\uA78C", "\u{10439}",
-    "\u{1043D}","\u{10443}",
-    "\u{1044B}","\u{1D5C5}",
-    "\u{1D5F9}","\uAB81",
+    "\u{1043D}", "\u{10443}",
+    "\u{1044B}", "\u{1D5C5}",
+    "\u{1D5F9}", "\uAB81",
     "\uABAE", "\uABAF",
     "\u02B9", "\u02BB",
     "\u02BC", "\u02BD",
@@ -366,13 +319,8 @@ const linesLetters =
     "\u3137", "\u3161",
     "\u3163", "\u318D",
     "\u318E",
-    
-    //"\uFF9E", "\uFF9F",
-    
 ];
-
-const linesLetters_compatibility = 
-[
+const linesLetters_compatibility = [
     "\u13b1", "\u13dd", "\u13de", "\u13df",
     "\u2c84", "\u2ca4", "\u2cb6", "\u2cba",
     "\u2cd0", "\u2cde", "\ua78b", "\u2c85",
@@ -394,215 +342,161 @@ const linesLetters_compatibility =
     "\u3137", "\u3161", "\u3163", "\u318d",
     "\u318e"
 ];
-
-const iLetters = [ "\u0049", "\u0406", "\u0399" ];
-
-function ToggleCustomizeMode(on)
-{
-    if (!on)
-    {
+const iLetters = ["\u0049", "\u0406", "\u0399"];
+function ToggleCustomizeMode(on) {
+    if (!on) {
         if (!CheckCustomCharacters())
             return;
     }
-
     document.getElementById("main_page").style.display = on ? "none" : "";
     document.getElementById("customize_page").style.display = on ? "" : "none";
 }
-
 let customChars = [];
 let customStartingChars = [];
-function CheckCustomCharacters()
-{
+function CheckCustomCharacters() {
     const startingChars = new Set();
     const chars = new Set();
-
     const invalidChars = new Set();
-
     const allChars = [];
     const allStartingChars = [];
-
-    const characters = Array.from(document.getElementById("customize_text_area").value);
-
-    for (let i = 0; i < characters.length; ++i)
-    {
+    const characters = document.getElementById("customize_text_area").value.split("");
+    for (let i = 0; i < characters.length; ++i) {
         const char = characters[i];
-
         if (char === "\n")
             continue;
-
-        if (char === " " || char === ";")
-        {
+        if (char === " " || char === ";") {
             invalidChars.add(char === " " ? " space" : char);
             continue;
         }
-
         if (invalidChars.has(char))
             continue;
-
-        if (chars.has(char))
-        {
+        if (chars.has(char)) {
             allChars.push(char);
             continue;
         }
-
-        if (startingChars.has(char))
-        {
+        if (startingChars.has(char)) {
             allStartingChars.push(char);
             continue;
         }
-
-        try
-        {
+        try {
             eval("var " + char);
             startingChars.add(char);
             allStartingChars.push(char);
         }
         catch (e) { }
-
-        try
-        {
+        try {
             eval("var a" + char);
             chars.add(char);
             allChars.push(char);
         }
-        catch (e)
-        {
+        catch (e) {
             invalidChars.add(char);
         }
     }
-
     const invalidCharsDiv = document.getElementById("invalid_chars");
-    if (invalidChars.size !== 0)
-    {
-        invalidCharsDiv.innerHTML = "<div style='margin-top: 10px;'>The following character" + (invalidChars.size === 1 ? "" : "s") + " cannot be used in variable names:</div>" +
-            Array.from(invalidChars).map(char => "<div style='font-family: consolas; font-size: 20px; margin-top: 10px;'>U+" +
-            char.codePointAt(0).toString(16).toUpperCase().padStart(4, "0") + " <span class='invalid_char'>" + char + "</span></div>").join("");
-
+    if (invalidChars.size !== 0) {
+        const codePointsDivText = Array.from(invalidChars).reduce((acc, curr) => {
+            const codePoint = curr.codePointAt(0);
+            if (codePoint === undefined)
+                return acc;
+            return acc + "<div style='font-family: consolas; font-size: 20px; margin-top: 10px;'>U+"
+                + codePoint.toString(16).toUpperCase().padStart(4, "0") + " <span class='invalid_char'>" + curr + "</span></div>";
+        }, "");
+        invalidCharsDiv.innerHTML = "<div style='margin-top: 10px;'>The following character" + (invalidChars.size === 1 ? "" : "s")
+            + " cannot be used in variable names:</div>" + codePointsDivText;
         invalidCharsDiv.style.display = "";
         return false;
     }
-    else if (startingChars.size === 0 && chars.size !== 0)
-    {
+    else if (startingChars.size === 0 && chars.size !== 0) {
         invalidCharsDiv.innerHTML = "<div style='margin-top: 10px;'>There are no characters that are valid starting characters in variable names</div>";
         invalidCharsDiv.style.display = "";
         return false;
     }
-    else
-    {
+    else {
         invalidCharsDiv.style.display = "none";
-
         customChars = allChars;
         customStartingChars = allStartingChars;
-
         return true;
     }
 }
-
 let variableNamesCharset = "zalgo";
-function CharsetChanged(name)
-{
+function CharsetChanged(name) {
     variableNamesCharset = name;
     document.getElementById("zalgo_level_slider_container").style.display = name === "zalgo" ? "" : "none";
     document.getElementById("custom_charset_customizer_button").style.display = name === "custom" ? "" : "none";
 }
-
 let isCompatibilityMode = false;
-function CompatibilityModeChanged(on)
-{
+function CompatibilityModeChanged(on) {
     document.getElementById("type_zalgo").disabled = on;
     document.getElementById("type_space").disabled = on;
-
-    if (on)
-    {
+    if (on) {
         const selector = document.getElementById("charset_selector");
         const selectedValue = selector.value;
-        if (selectedValue === "zalgo" || selectedValue === "space")
-        {
+        if (selectedValue === "zalgo" || selectedValue === "space") {
             selector.value = "i";
             CharsetChanged("i");
         }
     }
-
     isCompatibilityMode = on;
 }
-
 let isDeobfuscationProtection = false;
-function DeobfuscationProtectionChanged(on)
-{
+function DeobfuscationProtectionChanged(on) {
     isDeobfuscationProtection = on;
     document.getElementById("deobfuscation_protection_options").style.visibility = on ? "" : "hidden";
 }
-
-let deobfuscationProtectionMode = "skip"
-function DeobfuscationProtectionModeChanged(mode)
-{
+let deobfuscationProtectionMode = "skip";
+function DeobfuscationProtectionModeChanged(mode) {
     deobfuscationProtectionMode = mode;
 }
-
 let debugVarIndex = 0;
 const debuggingVarNames = false;
-
-function GetRandomString(len, allowLonger)
-{
+function GetRandomString(len, allowLonger) {
     if (debuggingVarNames)
         return "a_" + (debugVarIndex++);
-
-    if (len === undefined)
-    {
+    if (len === undefined) {
         const min = variableNameLength;
         const max = variableNameLength * 1.5;
         len = Math.floor(Math.random() * (max - min) + min);
     }
-    
     let name = "";
-    switch (variableNamesCharset)
-    {
+    switch (variableNamesCharset) {
         case "zalgo":
             name = RandomElementOf(startingChars);
-            while (name.length < len)
-            {
-                if (zalgoLevel === 0)
-                {
+            while (name.length < len) {
+                if (zalgoLevel === 0) {
                     name += RandomElementOf(standaloneChars);
                 }
-                else
-                {
+                else {
                     const chance = Math.random() * 100;
                     //name += standaloneChars[(standaloneChars.length * Math.random())<<0];
                     //continue;
-                    if (chance < 90)
-                    {
+                    if (chance < 90) {
                         // add a random number of zalgo characters with a starting character
                         name += RandomElementOf(baseChars);
-                            
                         const min = zalgoLevel;
                         const max = zalgoLevel * 1.5;
                         const diff = max - min;
-                        
-                        name += RandomElementOf(zalgo_up, Math.floor(Math.random() * diff + min));
-                        name += RandomElementOf(zalgo_mid, Math.floor(Math.random() * diff + min));
-                        name += RandomElementOf(zalgo_down, Math.floor(Math.random() * diff + min));
+                        name += RandomElementsOfStringArray(zalgo_up, Math.floor(Math.random() * diff + min));
+                        name += RandomElementsOfStringArray(zalgo_mid, Math.floor(Math.random() * diff + min));
+                        name += RandomElementsOfStringArray(zalgo_down, Math.floor(Math.random() * diff + min));
                         continue;
                     }
-                    else
-                    {
+                    else {
                         // add a random extended zalgo character with a starting character
                         // well, the only character that works and is not a letter is _
                         //name += RandomElementOf(charsThatWorkWithExtendedZalgo);
                         name += "_";
                         const count = urand(zalgoLevel, zalgoLevel * 1.5);
                         const ch = RandomElementOf(zalgoCharsExtended);
-                        
                         for (let j = 0; j < count; ++j)
                             name += ch;
-                        
                         continue;
                     }
                 }
             }
             break;
         case "lines":
-            name = RandomElementOf(isCompatibilityMode ? linesLetters_compatibility : linesLetters, len);
+            name = RandomElementsOfStringArray(isCompatibilityMode ? linesLetters_compatibility : linesLetters, len);
             break;
         case "space":
             name = "\u02cb";
@@ -612,159 +506,124 @@ function GetRandomString(len, allowLonger)
         case "i":
             if (len === undefined)
                 len = variableNameLength;
-            
-            name = RandomElementOf(iLetters, len);
+            name = RandomElementsOfStringArray(iLetters, len);
             break;
         case "custom":
-            if (customStartingChars.length === 0)
-            {
+            if (customStartingChars.length === 0) {
                 alert("No custom characters set");
                 throw new Error();
             }
-
-            name = RandomElementOf(customStartingChars, 1) + RandomElementOf(customChars, len - 1);
+            name = RandomElementsOfStringArray(customStartingChars, 1) + RandomElementsOfStringArray(customChars, len - 1);
             break;
         default:
             alert("unknown charset");
             throw new Error();
     }
-    
     if (allowLonger)
         return name;
-    else
-    {
-        if (name.codePointAt(len - 1) > 0xffff)
+    else {
+        const codePoint = name.codePointAt(len - 1);
+        if (codePoint !== undefined && codePoint > 0xffff)
             return name.substr(0, len + 1);
         else
             return name.substr(0, len);
     }
 }
-
 const usedVariableNames = new Set();
-function GetVarName()
-{
+function GetVarName() {
     let name;
-    
     const allowLongerName = (variableNamesCharset === "zalgo");
     let len;
-    if (allowLongerName)
-    {
+    if (allowLongerName) {
         const min = variableNameLength;
         const max = variableNameLength * 1.5;
         len = Math.floor(Math.random() * (max - min) + min);
     }
     else
         len = variableNameLength;
-
     let breaker = 0;
-    while (true)
-    {
+    while (true) {
         name = GetRandomString(len, allowLongerName);
         ++breaker;
-        if (!IsValidName(name))
-        {
+        if (!IsValidName(name)) {
             //console.log("invalid name (should not happen): " + name);
             continue;
         }
-        
-        if (!usedVariableNames.has(name))
-        {
+        if (!usedVariableNames.has(name)) {
             usedVariableNames.add(name);
             return name;
         }
-        
-        if (breaker > 100)
-        {
+        if (breaker > 100) {
             if (variableNamesCharset === "custom")
                 alert("Cannot get a variable name, try adding more custom characters or increase the variable name length");
             else
                 alert("Cannot get a variable name, try increasing the variable name length");
-
             throw new Error();
         }
     }
 }
-
-function GetIntFromBits(number, i0, i1, i2, i4, i8, i16, i32, i64, i128, i256, i512, i1024, i2048, i4096, i8192, i16384, i32768)
-{
+function GetIntFromBits(number, i0, i1, i2, i4, i8, i16, i32, i64, i128, i256, i512, i1024, i2048, i4096, i8192, i16384, i32768) {
     if (number === 0)
         return i0;
-    
     const ret = [];
-    
-    if (number & 1) ret.push(i1);
-    
+    if (number & 1)
+        ret.push(i1);
     number >>= 1;
-    if (number & 1) ret.push(i2);
-    
+    if (number & 1)
+        ret.push(i2);
     number >>= 1;
-    if (number & 1) ret.push(i4);
-    
+    if (number & 1)
+        ret.push(i4);
     number >>= 1;
-    if (number & 1) ret.push(i8);
-    
+    if (number & 1)
+        ret.push(i8);
     number >>= 1;
-    if (number & 1) ret.push(i16);
-    
+    if (number & 1)
+        ret.push(i16);
     number >>= 1;
-    if (number & 1) ret.push(i32);
-    
+    if (number & 1)
+        ret.push(i32);
     number >>= 1;
-    if (number & 1) ret.push(i64);
-    
+    if (number & 1)
+        ret.push(i64);
     number >>= 1;
-    if (number & 1) ret.push(i128);
-    
+    if (number & 1)
+        ret.push(i128);
     number >>= 1;
-    if (number & 1) ret.push(i256);
-    
+    if (number & 1)
+        ret.push(i256);
     number >>= 1;
-    if (number & 1) ret.push(i512);
-    
+    if (number & 1)
+        ret.push(i512);
     number >>= 1;
-    if (number & 1) ret.push(i1024);
-    
+    if (number & 1)
+        ret.push(i1024);
     number >>= 1;
-    if (number & 1) ret.push(i2048);
-    
+    if (number & 1)
+        ret.push(i2048);
     number >>= 1;
-    if (number & 1) ret.push(i4096);
-    
+    if (number & 1)
+        ret.push(i4096);
     number >>= 1;
-    if (number & 1) ret.push(i8192);
-    
+    if (number & 1)
+        ret.push(i8192);
     number >>= 1;
-    if (number & 1) ret.push(i16384);
-    
+    if (number & 1)
+        ret.push(i16384);
     number >>= 1;
-    if (number & 1) ret.push(i32768);
-    
+    if (number & 1)
+        ret.push(i32768);
     shuffle(ret);
     return ret.join("+");
 }
-
-function ConstructString(variableNames, text)
-{
-    const ret = [];
-    for (let i = 0; i < text.length; ++i)
-        ret.push(variableNames[text[i]]);
-    
-    return ret.join("+");
-}
-
-function button()
-{
+function button() {
     const text = document.getElementById("text_area").value;
-    if (text === "")
-    {
+    if (text === "") {
         alert("shit's empty, yo");
         return;
     }
-    
     usedVariableNames.clear();
-    
     let result = "(" + (isCompatibilityMode ? "function()" : "()=>") + "{var ";
-    
     const v_number_0 = GetVarName();
     const v_number_1 = GetVarName();
     const v_number_2 = GetVarName();
@@ -782,36 +641,23 @@ function button()
     const v_number_8192 = GetVarName();
     const v_number_16384 = GetVarName();
     const v_number_32768 = GetVarName();
-    
     // we generate variables for each letter
     const letters = {};
     // we need to find the character with the highest char code, and we only need to generate numbers up until that code
     let maxCharCode = 127; // we generate numbers for all ascii characters anyways
-    
-    function GetNumber(num)
-    {
-        return GetIntFromBits(num,
-            v_number_0, v_number_1, v_number_2, v_number_4, v_number_8, v_number_16, v_number_32,
-            v_number_64, v_number_128, v_number_256, v_number_512, v_number_1024, v_number_2048,
-            v_number_4096, v_number_8192, v_number_16384, v_number_32768)
+    function GetNumber(num) {
+        return GetIntFromBits(num, v_number_0, v_number_1, v_number_2, v_number_4, v_number_8, v_number_16, v_number_32, v_number_64, v_number_128, v_number_256, v_number_512, v_number_1024, v_number_2048, v_number_4096, v_number_8192, v_number_16384, v_number_32768);
     }
-
-    for (let i = 0; i < text.length; ++i)
-    {
+    for (let i = 0; i < text.length; ++i) {
         const ch = text.charCodeAt(i);
         if (ch in letters)
             continue;
-        
         if (maxCharCode < ch)
             maxCharCode = ch;
-        
         const variableName = GetVarName();
-        
         letters[ch] = [variableName + "=" + GetNumber(ch), variableName];
     }
-    
     const allowLongerName = (variableNamesCharset === "zalgo");
-
     result += v_number_0 + "='" + GetRandomString(variableNameLength, allowLongerName) + "'&'" + GetRandomString(variableNameLength, allowLongerName) + "',";
     result += v_number_1 + "=-~'" + GetRandomString(variableNameLength, allowLongerName) + "',";
     result += v_number_2 + "=" + v_number_1 + "-~'" + GetRandomString(variableNameLength, false) + "',";
@@ -820,241 +666,177 @@ function button()
     result += v_number_16 + "=" + v_number_2 + "*" + v_number_4 + "*" + v_number_2 + ",";
     result += v_number_32 + "=" + v_number_8 + "*" + v_number_4 + ",";
     result += v_number_64 + "=" + v_number_4 + "*" + v_number_16 + ",";
-    
     if (maxCharCode >= 128)
         result += v_number_128 + "=" + v_number_8 + "*" + v_number_2 + "*" + v_number_8 + ",";
-    
     if (maxCharCode >= 256)
         result += v_number_256 + "=" + v_number_64 + "*" + v_number_4 + ",";
-    
     if (maxCharCode >= 512)
         result += v_number_512 + "=" + v_number_8 + "*" + v_number_64 + ",";
-    
     if (maxCharCode >= 1024)
         result += v_number_1024 + "=" + v_number_4 + "*" + v_number_256 + ",";
-    
     if (maxCharCode >= 2048)
         result += v_number_2048 + "=" + v_number_64 + "*" + v_number_32 + ",";
-    
     if (maxCharCode >= 4096)
         result += v_number_4096 + "=" + v_number_256 + "*" + v_number_16 + ",";
-    
     if (maxCharCode >= 8192)
         result += v_number_8192 + "=" + v_number_8 + "*" + v_number_1024 + ",";
-    
     if (maxCharCode >= 16384)
         result += v_number_16384 + "=" + v_number_32 + "*" + v_number_512 + ",";
-    
     if (maxCharCode >= 32768)
         result += v_number_32768 + "=" + v_number_4 + "*" + v_number_8192 + ",";
-    
     // "acCdefghilmnoprsStuv. "  <- we need these characters
-
     // "false" = !1+[]
     const v_string_false = GetVarName();
     result += v_string_false + "=!" + v_number_1 + "+[],";
-    
     // f = "false"[0]
     const v_char_f = GetVarName();
     result += v_char_f + "=" + v_string_false + "[" + v_number_0 + "],";
-    
     // "undefined" = "f"[1]+[]
     const v_string_undefined = GetVarName();
     result += v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+[],";
-    
     // a = "false"[1]
     const v_char_a = GetVarName();
     result += v_char_a + "=" + v_string_false + "[" + v_number_1 + "],";
-    
     // l = "false"[2]
     const v_char_l = GetVarName();
     result += v_char_l + "=" + v_string_false + "[" + v_number_2 + "],";
-    
     // s = "false"[3]
     const v_char_s = GetVarName();
     result += v_char_s + "=" + v_string_false + "[" + v_number_2 + "+" + v_number_1 + "],";
-    
     // e = "false"[4]
     const v_char_e = GetVarName();
-    result  += v_char_e + "=" + v_string_false + "[" + v_number_4 + "],";
-    
+    result += v_char_e + "=" + v_string_false + "[" + v_number_4 + "],";
     // i = "undefined"[5]
     const v_char_i = GetVarName();
     result += v_char_i + "=" + v_string_undefined + "[" + v_number_4 + "+" + v_number_1 + "],";
-    
     // "[object Object]"
     const v_string_object_object = GetVarName();
     result += v_string_object_object + "=[]+{},";
-    
     // c = "[object Object]"[5]
     const v_char_c = GetVarName();
     result += v_char_c + "=" + v_string_object_object + "[" + v_number_4 + "+" + v_number_1 + "],";
-
     // b = "[object Object]"[2]
     const v_char_b = GetVarName();
-    result += v_char_b + "=" + v_string_object_object + "[" + v_number_2 + "],"
-    
+    result += v_char_b + "=" + v_string_object_object + "[" + v_number_2 + "],";
     // u = "undefined"[0]
     const v_char_u = GetVarName();
     result += v_char_u + "=" + v_string_undefined + "[" + v_number_0 + "],";
-    
     // n = "undefined"[1]
     const v_char_n = GetVarName();
     result += v_char_n + "=" + v_string_undefined + "[" + v_number_1 + "],";
-    
     // t = (!0+[])[0]
     const v_char_t = GetVarName();
     result += v_char_t + "=(!" + v_number_0 + "+[])[" + v_number_0 + "],";
-    
     // o = "[object Object]"[1]
     const v_char_o = GetVarName();
     result += v_char_o + "=" + v_string_object_object + "[" + v_number_1 + "],";
-    
     // space = "[object Object]"[7]
     const v_char_space = GetVarName();
     result += v_char_space + "=" + v_string_object_object + "[" + v_number_8 + "-" + v_number_1 + "],";
-    
     // d = "undefined"[2]
     const v_char_d = GetVarName();
     result += v_char_d + "=" + v_string_undefined + "[" + v_number_2 + "],";
-    
     // r = (!0+[])[1]
     const v_char_r = GetVarName();
     result += v_char_r + "=(!" + v_number_0 + "+[])[" + v_number_1 + "],";
-    
     // "constructor"
     const v_string_constructor = GetVarName();
-    result += v_string_constructor + "=" + [v_char_c, v_char_o, v_char_n, v_char_s, v_char_t, v_char_r, v_char_u, v_char_c, v_char_t, v_char_o, v_char_r, ].join("+") + ",";
-    
+    result += v_string_constructor + "=" + [v_char_c, v_char_o, v_char_n, v_char_s, v_char_t, v_char_r, v_char_u, v_char_c, v_char_t, v_char_o, v_char_r,].join("+") + ",";
     // []["filter"]
     const v_function_filter = GetVarName();
     result += v_function_filter + "=[][" + [v_char_f, v_char_i, v_char_l, v_char_t, v_char_e, v_char_r].join("+") + "],";
-
     // []["filter"]["constructor"]
     const v_function_function = GetVarName();
     result += v_function_function + "=" + v_function_filter + "[" + v_string_constructor + "],";
-
     // []["filter"]["constructor"]("return btoa")()
     const v_function_btoa = GetVarName();
     result += v_function_btoa + "=" + v_function_function + "(" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_b, v_char_t, v_char_o, v_char_a].join("+") + ")(),";
-
     // S = btoa("a ")[1]
     const v_char_S = GetVarName();
     result += v_char_S + "=" + v_function_btoa + "(" + v_char_a + "+" + v_char_space + ")[" + v_number_1 + "],";
-    
     // g = btoa("b")[1]
     const v_char_g = GetVarName();
     result += v_char_g + "=" + v_function_btoa + "(" + v_char_b + ")[" + v_number_1 + "],";
-    
     // . = (+("16e32")+[])[1]
     const v_char_dot = GetVarName();
     result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+[])[" + v_number_1 + "],";
-    
     // "toString"
     const v_string_toString = GetVarName();
     result += v_string_toString + "=" + [v_char_t, v_char_o, v_char_S, v_char_t, v_char_r, v_char_i, v_char_n, v_char_g].join("+") + ",";
-    
     // v = (32-1)["toString"](32)
     const v_char_v = GetVarName();
     result += v_char_v + "=(" + v_number_32 + "-" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),";
-    
     // p = (16+8+1)["toString"](32)
     const v_char_p = GetVarName();
     result += v_char_p + "=(" + v_number_1 + "+" + v_number_8 + "+" + v_number_16 + ")[" + v_string_toString + "](" + v_number_32 + "),";
-    
     // []["filter"]["constructor"]("return eval")()
     const v_function_eval = GetVarName();
     result += v_function_eval + "=" + v_function_function + "(" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_v, v_char_a, v_char_l].join("+") + ")(),";
-    
     // S = btoa("d ")[1]
     const v_char_C = GetVarName();
     result += v_char_C + "=" + v_function_btoa + "(" + v_char_d + "+" + v_char_space + ")[" + v_number_1 + "],";
-    
     // m = btoa("ba")[1]
     const v_char_m = GetVarName();
     result += v_char_m + "=" + v_function_btoa + "(" + v_char_b + "+" + v_char_a + ")[" + v_number_1 + "],";
-    
     // h = (17)["toString"](32)
     const v_char_h = GetVarName();
     result += v_char_h + "=(" + v_number_16 + "+" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),";
-    
     // ''["constructor"]["fromCharCode"]
     const v_function_stringFromCharCode = GetVarName();
     result += v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
-    
     let v_bool_deobfuscationOk;
-    if (isDeobfuscationProtection)
-    {
+    if (isDeobfuscationProtection) {
         let current = "";
         const dummyString = GetRandomString(variableNameLength, allowLongerName);
         const v_string_dummyString = GetVarName();
         current += v_string_dummyString + "='" + dummyString + "',";
-
         const v_function_deobfuscationProtection = GetVarName();
         const functionStart = isCompatibilityMode ? "function()" : "()=>";
         current += v_function_deobfuscationProtection + "=" + functionStart + "{'" + dummyString + "'},";
-
         // how this works:
         // deobfuscators usually format the code to make it more readable
         // so we create a dummy function which will be surely formatted
         // but in javascript, you can convert functions to a string, and if you convert a user-defined function to string, you'll get back the exact string representation of the function
         // we can detect this and do stuff if we want
-
-        if (deobfuscationProtectionMode === "skip")
-        {
+        if (deobfuscationProtectionMode === "skip") {
             v_bool_deobfuscationOk = GetVarName();
             current += v_bool_deobfuscationOk + "=(" + v_function_deobfuscationProtection + "+[])["
                 + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
                 + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")==" + v_string_dummyString + ",";
         }
-        else
-        {
+        else {
             const v_string_otherFunctionName = GetVarName();
             const v_string_param1_deobfuscationProtection = GetVarName();
-
             current += v_string_otherFunctionName + "=" + v_function_function + "('" + v_string_param1_deobfuscationProtection + "',";
-
-            function GetCharCodes(str)
-            {
+            function GetCharCodes(str) {
                 const charCodes = str.split("").map(char => char.charCodeAt(0));
                 return v_function_stringFromCharCode + "(" + charCodes.map(charCode => GetNumber(charCode))
                     .join(",") + ")";
             }
-
             if (deobfuscationProtectionMode === "error")
                 current += GetCharCodes("function z(){" + v_string_param1_deobfuscationProtection + "!='" + dummyString + "'&&z()}z()");
             else if (deobfuscationProtectionMode === "loop")
                 current += GetCharCodes("if(" + v_string_param1_deobfuscationProtection + "!='" + dummyString + "')for(;;){}");
             else
                 throw new Error("Unknown deobfuscation protection mode");
-
             current += ")((" + v_function_deobfuscationProtection + "+[])["
                 + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
                 + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")),";
         }
-
         result += current;
     }
-
     const finalLetters = [];
     const letterVariableNames = {};
-    for (let i in letters)
-    {
+    for (let i in letters) {
         finalLetters.push(letters[i][0]);
         letterVariableNames[i] = letters[i][1];
     }
-    
     shuffle(finalLetters);
-    
     result += finalLetters.join(",") + ";";
-    
-    if (isDeobfuscationProtection && deobfuscationProtectionMode === "skip")
-    {
+    if (isDeobfuscationProtection && deobfuscationProtectionMode === "skip") {
         result += v_bool_deobfuscationOk + "&&";
     }
-
     result += v_function_function + "(";
-    
     // maximum number of function arguments is limited (65535 on chrome), so for long texts, we need to split up the process.
     // batchCount tells that how many arguments we use for a function call
     // 4096 should be fine on all browsers
@@ -1062,19 +844,14 @@ function button()
     const batchCount = 4096;
     const batchData = [];
     let textIndex = 0;
-    while (textIndex < text.length)
-    {
+    while (textIndex < text.length) {
         let currentText = v_function_stringFromCharCode + "(";
-        
         const finalTextAssembled = [];
         const target = Math.min(textIndex + batchCount * (Math.random() * 0.5 + 0.5) | 0, text.length);
-        
         for (; textIndex < target; ++textIndex)
             finalTextAssembled.push(letterVariableNames[text.charCodeAt(textIndex)]);
-        
         currentText += finalTextAssembled.join(",");
         currentText += ")";
-        
         batchData.push(currentText);
     }
     result += batchData.join("+");
