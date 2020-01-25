@@ -113,7 +113,7 @@ function urand(min: number, max?: number)
 {
     if (max === undefined)
         return Math.floor(Math.random() * min);
-    
+
     return Math.floor(Math.random() * max - min) + min;
 }
 
@@ -145,7 +145,7 @@ function IsValidName(name: string)
 }
 
 const zalgoCharsExtended =
-[   
+[
     "\u08f1", "\u0363", "\u0364", "\u0365", "\u0366", "\u0367", "\u0368", "\u0369",
     "\u036a", "\u036b", "\u036c", "\u036d", "\u036e", "\u036f", "\u0483", "\u0484",
     "\u0485", "\u0486", "\u0593", "\u0594", "\u0595", "\u0597", "\u0598", "\u059c",
@@ -169,49 +169,49 @@ const zalgoCharsExtended =
 // stolen from http://eeemo.net/
 const zalgo_up =
 [
-    '\u030d', '\u030e', '\u0304', '\u0305', 
-    '\u033f', '\u0311', '\u0306', '\u0310', 
-    '\u0352', '\u0357', '\u0351', '\u0307', 
-    '\u0308', '\u030a', '\u0342', '\u0343', 
-    '\u0344', '\u034a', '\u034b', '\u034c', 
-    '\u0303', '\u0302', '\u030c', '\u0350', 
-    '\u0300', '\u0301', '\u030b', '\u030f', 
-    '\u0312', '\u0313', '\u0314', '\u033d', 
-    '\u0309', '\u0363', '\u0364', '\u0365', 
-    '\u0366', '\u0367', '\u0368', '\u0369', 
-    '\u036a', '\u036b', '\u036c', '\u036d', 
-    '\u036e', '\u036f', '\u033e', '\u035b', 
+    '\u030d', '\u030e', '\u0304', '\u0305',
+    '\u033f', '\u0311', '\u0306', '\u0310',
+    '\u0352', '\u0357', '\u0351', '\u0307',
+    '\u0308', '\u030a', '\u0342', '\u0343',
+    '\u0344', '\u034a', '\u034b', '\u034c',
+    '\u0303', '\u0302', '\u030c', '\u0350',
+    '\u0300', '\u0301', '\u030b', '\u030f',
+    '\u0312', '\u0313', '\u0314', '\u033d',
+    '\u0309', '\u0363', '\u0364', '\u0365',
+    '\u0366', '\u0367', '\u0368', '\u0369',
+    '\u036a', '\u036b', '\u036c', '\u036d',
+    '\u036e', '\u036f', '\u033e', '\u035b',
     '\u0346', '\u031a'
 ];
 
 const zalgo_down =
 [
-    '\u0316', '\u0317', '\u0318', '\u0319', 
-    '\u031c', '\u031d', '\u031e', '\u031f', 
-    '\u0320', '\u0324', '\u0325', '\u0326', 
-    '\u0329', '\u032a', '\u032b', '\u032c', 
-    '\u032d', '\u032e', '\u032f', '\u0330', 
-    '\u0331', '\u0332', '\u0333', '\u0339', 
-    '\u033a', '\u033b', '\u033c', '\u0345', 
-    '\u0347', '\u0348', '\u0349', '\u034d', 
-    '\u034e', '\u0353', '\u0354', '\u0355', 
+    '\u0316', '\u0317', '\u0318', '\u0319',
+    '\u031c', '\u031d', '\u031e', '\u031f',
+    '\u0320', '\u0324', '\u0325', '\u0326',
+    '\u0329', '\u032a', '\u032b', '\u032c',
+    '\u032d', '\u032e', '\u032f', '\u0330',
+    '\u0331', '\u0332', '\u0333', '\u0339',
+    '\u033a', '\u033b', '\u033c', '\u0345',
+    '\u0347', '\u0348', '\u0349', '\u034d',
+    '\u034e', '\u0353', '\u0354', '\u0355',
     '\u0356', '\u0359', '\u035a', '\u0323'
 ];
 
 const zalgo_mid =
 [
-    '\u0315', '\u031b', '\u0340', '\u0341', 
-    '\u0358', '\u0321', '\u0322', '\u0327', 
-    '\u0328', '\u0334', '\u0335', '\u0336', 
-    '\u034f', '\u035c', '\u035d', '\u035e', 
-    '\u035f', '\u0360', '\u0362', '\u0338', 
+    '\u0315', '\u031b', '\u0340', '\u0341',
+    '\u0358', '\u0321', '\u0322', '\u0327',
+    '\u0328', '\u0334', '\u0335', '\u0336',
+    '\u034f', '\u035c', '\u035d', '\u035e',
+    '\u035f', '\u0360', '\u0362', '\u0338',
     '\u0337', '\u0361'
 ];
 
-const standaloneChars = 
+const standaloneChars =
 [
-    "\u13B0", "\u13B1", "\u2C0D", "\u2CB2", 
-    "\u2CBA", "\uA722", "\uA724", "\uA78B", 
+    "\u13B0", "\u13B1", "\u2C0D", "\u2CB2",
+    "\u2CBA", "\uA722", "\uA724", "\uA78B",
 
     "\u02B9", "\u02BA", "\u02BB", "\u02BC",
     "\u02BD", "\u02BE", "\u02BF", "\u02C6",
@@ -248,7 +248,7 @@ const standaloneChars =
     "\u1508", "\u1540", "\u153E",
 ];
 
-const startingChars = 
+const startingChars =
 [
     "\u02b9", "\u02ba", "\u02bb", "\u02bc", "\u02bd", "\u02be", "\u02bf", "\u02c6",
     "\u02c7", "\u02c8", "\u02cc", "\u02d1", "\u0374", "\u037a", "\u0559", "\u1843",
@@ -273,7 +273,7 @@ const startingChars =
 
 shuffle(startingChars);
 
-const baseChars = 
+const baseChars =
 [
     "\u02b9", "\u02ba", "\u02bb", "\u02bc", "\u02bd", "\u02be", "\u02bf", "\u02c6",
     "\u02c7", "\u02c8", "\u02cc", "\u02d1", "\u0374", "\u037a", "\u0559", "\u1d54",
@@ -295,7 +295,7 @@ const charsThatWorkWithExtendedZalgo =
     "_", "o", "I", "x"
 ];
 /*
-const linesLetters = 
+const linesLetters =
 [
     "\u2C85", "\u2C93", "\u2CD1", "\u2CDF", "\uAB80", "\uAB81", "\uABAE", "\u13B0",
     "\u13B1", "\u13DE", "\u2C2C", "\u2C84", "\u2CC6", "\u2CD0", "\u0B9F", "\u1100",
@@ -304,7 +304,7 @@ const linesLetters =
     "\u3131", "\u3134", "\u314F", "\u3153", "\u3163"
 ];*/
 
-const linesLetters = 
+const linesLetters =
 [
     "\u13B1", "\u13DD",
     "\u13DE", "\u13DF",
@@ -366,12 +366,12 @@ const linesLetters =
     "\u3137", "\u3161",
     "\u3163", "\u318D",
     "\u318E",
-    
+
     //"\uFF9E", "\uFF9F",
-    
+
 ];
 
-const linesLetters_compatibility = 
+const linesLetters_compatibility =
 [
     "\u13b1", "\u13dd", "\u13de", "\u13df",
     "\u2c84", "\u2ca4", "\u2cb6", "\u2cba",
@@ -479,7 +479,7 @@ function CheckCustomCharacters()
             const codePoint = curr.codePointAt(0);
             if (codePoint === undefined)
                 return acc;
-            
+
             return acc + "<div style='font-family: consolas; font-size: 20px; margin-top: 10px;'>U+"
                 + codePoint.toString(16).toUpperCase().padStart(4, "0") + " <span class='invalid_char'>" + curr + "</span></div>";
         }, "");
@@ -561,7 +561,7 @@ function GetRandomString(len: number, allowLonger: boolean)
         const max = variableNameLength * 1.5;
         len = Math.floor(Math.random() * (max - min) + min);
     }
-    
+
     let name = "";
     switch (variableNamesCharset)
     {
@@ -582,11 +582,11 @@ function GetRandomString(len: number, allowLonger: boolean)
                     {
                         // add a random number of zalgo characters with a starting character
                         name += RandomElementOf(baseChars);
-                            
+
                         const min = zalgoLevel;
                         const max = zalgoLevel * 1.5;
                         const diff = max - min;
-                        
+
                         name += RandomElementsOfStringArray(zalgo_up, Math.floor(Math.random() * diff + min));
                         name += RandomElementsOfStringArray(zalgo_mid, Math.floor(Math.random() * diff + min));
                         name += RandomElementsOfStringArray(zalgo_down, Math.floor(Math.random() * diff + min));
@@ -600,10 +600,10 @@ function GetRandomString(len: number, allowLonger: boolean)
                         name += "_";
                         const count = urand(zalgoLevel, zalgoLevel * 1.5);
                         const ch = RandomElementOf(zalgoCharsExtended);
-                        
+
                         for (let j = 0; j < count; ++j)
                             name += ch;
-                        
+
                         continue;
                     }
                 }
@@ -620,7 +620,7 @@ function GetRandomString(len: number, allowLonger: boolean)
         case "i":
             if (len === undefined)
                 len = variableNameLength;
-            
+
             name = RandomElementsOfStringArray(iLetters, len);
             break;
         case "custom":
@@ -636,7 +636,7 @@ function GetRandomString(len: number, allowLonger: boolean)
             alert("unknown charset");
             throw new Error();
     }
-    
+
     if (allowLonger)
         return name;
     else
@@ -653,7 +653,7 @@ const usedVariableNames = new Set();
 function GetVarName()
 {
     let name;
-    
+
     const allowLongerName = (variableNamesCharset === "zalgo");
     let len;
     if (allowLongerName)
@@ -675,13 +675,13 @@ function GetVarName()
             //console.log("invalid name (should not happen): " + name);
             continue;
         }
-        
+
         if (!usedVariableNames.has(name))
         {
             usedVariableNames.add(name);
             return name;
         }
-        
+
         if (breaker > 100)
         {
             if (variableNamesCharset === "custom")
@@ -699,56 +699,56 @@ function GetIntFromBits(number: number, i0: string, i1: string, i2: string, i4: 
 {
     if (number === 0)
         return i0;
-    
+
     const ret: string[] = [];
-    
+
     if (number & 1) ret.push(i1);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i2);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i4);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i8);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i16);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i32);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i64);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i128);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i256);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i512);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i1024);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i2048);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i4096);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i8192);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i16384);
-    
+
     number >>= 1;
     if (number & 1) ret.push(i32768);
-    
+
     shuffle(ret);
     return ret.join("+");
 }
@@ -761,11 +761,11 @@ function button()
         alert("shit's empty, yo");
         return;
     }
-    
+
     usedVariableNames.clear();
-    
+
     let result = "(" + (isCompatibilityMode ? "function()" : "()=>") + "{var ";
-    
+
     const v_number_0 = GetVarName();
     const v_number_1 = GetVarName();
     const v_number_2 = GetVarName();
@@ -783,10 +783,10 @@ function button()
     const v_number_8192 = GetVarName();
     const v_number_16384 = GetVarName();
     const v_number_32768 = GetVarName();
-    
+
     // we generate variables for each letter
     const letters: { [index: string]: [string, string] } = {};
-    
+
     function GetNumber(num: number)
     {
         return GetIntFromBits(num,
@@ -824,45 +824,45 @@ function button()
     result += v_number_8192 + "=" + v_number_8 + "*" + v_number_1024 + ",";
     result += v_number_16384 + "=" + v_number_32 + "*" + v_number_512 + ",";
     result += v_number_32768 + "=" + v_number_4 + "*" + v_number_8192 + ",";
-    
+
     // "acCdefghilmnoprsStuv. "  <- we need these characters
 
     // "false" = !1+[]
     const v_string_false = GetVarName();
     result += v_string_false + "=!" + v_number_1 + "+[],";
-    
+
     // f = "false"[0]
     const v_char_f = GetVarName();
     result += v_char_f + "=" + v_string_false + "[" + v_number_0 + "],";
-    
+
     // "undefined" = "f"[1]+[]
     const v_string_undefined = GetVarName();
     result += v_string_undefined + "=" + v_char_f + "[" + v_number_1 + "]+[],";
-    
+
     // a = "false"[1]
     const v_char_a = GetVarName();
     result += v_char_a + "=" + v_string_false + "[" + v_number_1 + "],";
-    
+
     // l = "false"[2]
     const v_char_l = GetVarName();
     result += v_char_l + "=" + v_string_false + "[" + v_number_2 + "],";
-    
+
     // s = "false"[3]
     const v_char_s = GetVarName();
     result += v_char_s + "=" + v_string_false + "[" + v_number_2 + "+" + v_number_1 + "],";
-    
+
     // e = "false"[4]
     const v_char_e = GetVarName();
     result  += v_char_e + "=" + v_string_false + "[" + v_number_4 + "],";
-    
+
     // i = "undefined"[5]
     const v_char_i = GetVarName();
     result += v_char_i + "=" + v_string_undefined + "[" + v_number_4 + "+" + v_number_1 + "],";
-    
+
     // "[object Object]"
     const v_string_object_object = GetVarName();
     result += v_string_object_object + "=[]+{},";
-    
+
     // c = "[object Object]"[5]
     const v_char_c = GetVarName();
     result += v_char_c + "=" + v_string_object_object + "[" + v_number_4 + "+" + v_number_1 + "],";
@@ -870,39 +870,39 @@ function button()
     // b = "[object Object]"[2]
     const v_char_b = GetVarName();
     result += v_char_b + "=" + v_string_object_object + "[" + v_number_2 + "],"
-    
+
     // u = "undefined"[0]
     const v_char_u = GetVarName();
     result += v_char_u + "=" + v_string_undefined + "[" + v_number_0 + "],";
-    
+
     // n = "undefined"[1]
     const v_char_n = GetVarName();
     result += v_char_n + "=" + v_string_undefined + "[" + v_number_1 + "],";
-    
+
     // t = (!0+[])[0]
     const v_char_t = GetVarName();
     result += v_char_t + "=(!" + v_number_0 + "+[])[" + v_number_0 + "],";
-    
+
     // o = "[object Object]"[1]
     const v_char_o = GetVarName();
     result += v_char_o + "=" + v_string_object_object + "[" + v_number_1 + "],";
-    
+
     // space = "[object Object]"[7]
     const v_char_space = GetVarName();
     result += v_char_space + "=" + v_string_object_object + "[" + v_number_8 + "-" + v_number_1 + "],";
-    
+
     // d = "undefined"[2]
     const v_char_d = GetVarName();
     result += v_char_d + "=" + v_string_undefined + "[" + v_number_2 + "],";
-    
+
     // r = (!0+[])[1]
     const v_char_r = GetVarName();
     result += v_char_r + "=(!" + v_number_0 + "+[])[" + v_number_1 + "],";
-    
+
     // "constructor"
     const v_string_constructor = GetVarName();
     result += v_string_constructor + "=" + [v_char_c, v_char_o, v_char_n, v_char_s, v_char_t, v_char_r, v_char_u, v_char_c, v_char_t, v_char_o, v_char_r, ].join("+") + ",";
-    
+
     // []["filter"]
     const v_function_filter = GetVarName();
     result += v_function_filter + "=[][" + [v_char_f, v_char_i, v_char_l, v_char_t, v_char_e, v_char_r].join("+") + "],";
@@ -918,47 +918,47 @@ function button()
     // S = btoa("a ")[1]
     const v_char_S = GetVarName();
     result += v_char_S + "=" + v_function_btoa + "(" + v_char_a + "+" + v_char_space + ")[" + v_number_1 + "],";
-    
+
     // g = btoa("b")[1]
     const v_char_g = GetVarName();
     result += v_char_g + "=" + v_function_btoa + "(" + v_char_b + ")[" + v_number_1 + "],";
-    
+
     // . = (+("16e32")+[])[1]
     const v_char_dot = GetVarName();
     result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+[])[" + v_number_1 + "],";
-    
+
     // "toString"
     const v_string_toString = GetVarName();
     result += v_string_toString + "=" + [v_char_t, v_char_o, v_char_S, v_char_t, v_char_r, v_char_i, v_char_n, v_char_g].join("+") + ",";
-    
+
     // v = (32-1)["toString"](32)
     const v_char_v = GetVarName();
     result += v_char_v + "=(" + v_number_32 + "-" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),";
-    
+
     // p = (16+8+1)["toString"](32)
     const v_char_p = GetVarName();
     result += v_char_p + "=(" + v_number_1 + "+" + v_number_8 + "+" + v_number_16 + ")[" + v_string_toString + "](" + v_number_32 + "),";
-    
+
     // []["filter"]["constructor"]("return eval")()
     const v_function_eval = GetVarName();
     result += v_function_eval + "=" + v_function_function + "(" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_v, v_char_a, v_char_l].join("+") + ")(),";
-    
+
     // S = btoa("d ")[1]
     const v_char_C = GetVarName();
     result += v_char_C + "=" + v_function_btoa + "(" + v_char_d + "+" + v_char_space + ")[" + v_number_1 + "],";
-    
+
     // m = btoa("ba")[1]
     const v_char_m = GetVarName();
     result += v_char_m + "=" + v_function_btoa + "(" + v_char_b + "+" + v_char_a + ")[" + v_number_1 + "],";
-    
+
     // h = (17)["toString"](32)
     const v_char_h = GetVarName();
     result += v_char_h + "=(" + v_number_16 + "+" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),";
-    
+
     // ''["constructor"]["fromCharCode"]
     const v_function_stringFromCharCode = GetVarName();
     result += v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
-    
+
     let v_bool_deobfuscationOk;
     if (isDeobfuscationProtection)
     {
@@ -1020,18 +1020,18 @@ function button()
         finalLetters.push(letters[i][0]);
         letterVariableNames[i] = letters[i][1];
     }
-    
+
     shuffle(finalLetters);
-    
+
     result += finalLetters.join(",") + ";";
-    
+
     if (isDeobfuscationProtection && deobfuscationProtectionMode === "skip")
     {
         result += v_bool_deobfuscationOk + "&&";
     }
 
     result += v_function_function + "(";
-    
+
     // maximum number of function arguments is limited (65535 on chrome), so for long texts, we need to split up the process.
     // batchCount tells that how many arguments we use for a function call
     // 4096 should be fine on all browsers
@@ -1042,16 +1042,16 @@ function button()
     while (textIndex < text.length)
     {
         let currentText = v_function_stringFromCharCode + "(";
-        
+
         const finalTextAssembled = [];
         const target = Math.min(textIndex + batchCount * (Math.random() * 0.5 + 0.5) | 0, text.length);
-        
+
         for (; textIndex < target; ++textIndex)
             finalTextAssembled.push(letterVariableNames[text.charCodeAt(textIndex)]);
-        
+
         currentText += finalTextAssembled.join(",");
         currentText += ")";
-        
+
         batchData.push(currentText);
     }
     result += batchData.join("+");
