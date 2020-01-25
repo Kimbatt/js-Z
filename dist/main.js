@@ -643,8 +643,6 @@ function button() {
     const v_number_32768 = GetVarName();
     // we generate variables for each letter
     const letters = {};
-    // we need to find the character with the highest char code, and we only need to generate numbers up until that code
-    let maxCharCode = 127; // we generate numbers for all ascii characters anyways
     function GetNumber(num) {
         return GetIntFromBits(num, v_number_0, v_number_1, v_number_2, v_number_4, v_number_8, v_number_16, v_number_32, v_number_64, v_number_128, v_number_256, v_number_512, v_number_1024, v_number_2048, v_number_4096, v_number_8192, v_number_16384, v_number_32768);
     }
@@ -652,8 +650,6 @@ function button() {
         const ch = text.charCodeAt(i);
         if (ch in letters)
             continue;
-        if (maxCharCode < ch)
-            maxCharCode = ch;
         const variableName = GetVarName();
         letters[ch] = [variableName + "=" + GetNumber(ch), variableName];
     }
@@ -666,24 +662,15 @@ function button() {
     result += v_number_16 + "=" + v_number_2 + "*" + v_number_4 + "*" + v_number_2 + ",";
     result += v_number_32 + "=" + v_number_8 + "*" + v_number_4 + ",";
     result += v_number_64 + "=" + v_number_4 + "*" + v_number_16 + ",";
-    if (maxCharCode >= 128)
-        result += v_number_128 + "=" + v_number_8 + "*" + v_number_2 + "*" + v_number_8 + ",";
-    if (maxCharCode >= 256)
-        result += v_number_256 + "=" + v_number_64 + "*" + v_number_4 + ",";
-    if (maxCharCode >= 512)
-        result += v_number_512 + "=" + v_number_8 + "*" + v_number_64 + ",";
-    if (maxCharCode >= 1024)
-        result += v_number_1024 + "=" + v_number_4 + "*" + v_number_256 + ",";
-    if (maxCharCode >= 2048)
-        result += v_number_2048 + "=" + v_number_64 + "*" + v_number_32 + ",";
-    if (maxCharCode >= 4096)
-        result += v_number_4096 + "=" + v_number_256 + "*" + v_number_16 + ",";
-    if (maxCharCode >= 8192)
-        result += v_number_8192 + "=" + v_number_8 + "*" + v_number_1024 + ",";
-    if (maxCharCode >= 16384)
-        result += v_number_16384 + "=" + v_number_32 + "*" + v_number_512 + ",";
-    if (maxCharCode >= 32768)
-        result += v_number_32768 + "=" + v_number_4 + "*" + v_number_8192 + ",";
+    result += v_number_128 + "=" + v_number_8 + "*" + v_number_2 + "*" + v_number_8 + ",";
+    result += v_number_256 + "=" + v_number_64 + "*" + v_number_4 + ",";
+    result += v_number_512 + "=" + v_number_8 + "*" + v_number_64 + ",";
+    result += v_number_1024 + "=" + v_number_4 + "*" + v_number_256 + ",";
+    result += v_number_2048 + "=" + v_number_64 + "*" + v_number_32 + ",";
+    result += v_number_4096 + "=" + v_number_256 + "*" + v_number_16 + ",";
+    result += v_number_8192 + "=" + v_number_8 + "*" + v_number_1024 + ",";
+    result += v_number_16384 + "=" + v_number_32 + "*" + v_number_512 + ",";
+    result += v_number_32768 + "=" + v_number_4 + "*" + v_number_8192 + ",";
     // "acCdefghilmnoprsStuv. "  <- we need these characters
     // "false" = !1+[]
     const v_string_false = GetVarName();
