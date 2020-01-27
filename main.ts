@@ -1,4 +1,6 @@
 
+document.title = "j̏ͭͯͤͫ͗͋s͔̣͎̎̑ͭͩ-̣͇ͮͦZ̹͚̫̪͓̠͐ͭ͊̽̾̽ ͍̣̯ͮ̏̂̄ͧͯ̚-͗̍̂ͯ̅̚ ͬ̂ͯ͋J̞̩̠͓͈̳̩ã̰̥̞͚͓v͚̞̯̺͇ḁ̲̹̤͎ͤS̱̰̠̣͚͛̈̌̄̚ͅc͖̥͉̹̮̻̓̊̑ri̭̗̳̩̾p͖͇̟͒t̅̇͋ͅ ̥o̯̗̱b͖̦̹̣̞f̺̥̽̂u͎̖̦̻̻͔̗̐ͥ̂̓̒̅̅s̰̪̞ͫ̿c̲͈̪͓̖ͭ̽â̩͙ͅt̻̺͚ō̝̗͔̗̰r̠̩̤͚̋ͩ";
+
 function CopyResult(button: HTMLButtonElement)
 {
     button.innerText = "Copied!";
@@ -541,14 +543,29 @@ function DeobfuscationProtectionChanged(on: boolean)
     document.getElementById("deobfuscation_protection_options")!.style.visibility = on ? "" : "hidden";
 }
 
-let deobfuscationProtectionMode = "skip"
+let deobfuscationProtectionMode = "skip";
 function DeobfuscationProtectionModeChanged(mode: string)
 {
     deobfuscationProtectionMode = mode;
+    document.getElementById("custom_code_edit_button")!.style.display = mode === "custom" ? "" : "none";
+}
+
+const deobfuscationCustomCodeEditorTextArea = <HTMLTextAreaElement>document.getElementById("deobfuscation_custom_code_text_area");
+function ShowCustomCodeEditor(show: boolean)
+{
+    ShowOptions(false);
+    document.getElementById("main_page")!.style.display = show ? "none" : "";
+    document.getElementById("customize_deobfuscation_code_page")!.style.display = show ? "" : "none";
+}
+
+function AutoResizeTextarea(textarea: HTMLTextAreaElement, padding: number)
+{
+    textarea.style.height = "auto";
+    textarea.style.height = (textarea.scrollHeight - padding * 2) + "px";
 }
 
 let debugVarIndex = 0;
-const debuggingVarNames = false;
+let debuggingVarNames = false;
 
 function GetRandomString(len: number, allowLonger: boolean)
 {
@@ -959,7 +976,7 @@ function button()
     const v_function_stringFromCharCode = GetVarName();
     result += v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
 
-    let v_bool_deobfuscationOk;
+    let v_bool_deobfuscationOk = "";
     if (isDeobfuscationProtection)
     {
         let current = "";
@@ -977,14 +994,12 @@ function button()
         // but in javascript, you can convert functions to a string, and if you convert a user-defined function to string, you'll get back the exact string representation of the function
         // we can detect this and do stuff if we want
 
-        if (deobfuscationProtectionMode === "skip")
-        {
-            v_bool_deobfuscationOk = GetVarName();
-            current += v_bool_deobfuscationOk + "=(" + v_function_deobfuscationProtection + "+[])["
-                + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
-                + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")==" + v_string_dummyString + ",";
-        }
-        else
+        v_bool_deobfuscationOk = GetVarName();
+        current += v_bool_deobfuscationOk + "=(" + v_function_deobfuscationProtection + "+[])["
+            + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
+            + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")==" + v_string_dummyString + ",";
+
+        if (deobfuscationProtectionMode !== "skip")
         {
             const v_string_otherFunctionName = GetVarName();
             const v_string_param1_deobfuscationProtection = GetVarName();
@@ -998,12 +1013,21 @@ function button()
                     .join(",") + ")";
             }
 
-            if (deobfuscationProtectionMode === "error")
-                current += GetCharCodes("function z(){" + v_string_param1_deobfuscationProtection + "!='" + dummyString + "'&&z()}z()");
-            else if (deobfuscationProtectionMode === "loop")
-                current += GetCharCodes("if(" + v_string_param1_deobfuscationProtection + "!='" + dummyString + "')for(;;){}");
-            else
-                throw new Error("Unknown deobfuscation protection mode");
+            switch (deobfuscationProtectionMode)
+            {
+                case "error":
+                    current += GetCharCodes("!function ƒ(){" + v_string_param1_deobfuscationProtection + "=='" + dummyString + "'||ƒ()}()");
+                    break;
+                case "loop":
+                    current += GetCharCodes("if(" + v_string_param1_deobfuscationProtection + "!='" + dummyString + "')for(;;){}");
+                    break;
+                case "custom":
+                    current += GetCharCodes(v_string_param1_deobfuscationProtection + "=='" + dummyString
+                    + "'||!function(){" + deobfuscationCustomCodeEditorTextArea.value + "}()");
+                    break;
+                default:
+                    throw new Error("Unknown deobfuscation protection mode");
+            }
 
             current += ")((" + v_function_deobfuscationProtection + "+[])["
                 + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
@@ -1025,10 +1049,8 @@ function button()
 
     result += finalLetters.join(",") + ";";
 
-    if (isDeobfuscationProtection && deobfuscationProtectionMode === "skip")
-    {
+    if (isDeobfuscationProtection)
         result += v_bool_deobfuscationOk + "&&";
-    }
 
     result += v_function_function + "(";
 

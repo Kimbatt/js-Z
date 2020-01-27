@@ -1,4 +1,5 @@
 "use strict";
+document.title = "j̏ͭͯͤͫ͗͋s͔̣͎̎̑ͭͩ-̣͇ͮͦZ̹͚̫̪͓̠͐ͭ͊̽̾̽ ͍̣̯ͮ̏̂̄ͧͯ̚-͗̍̂ͯ̅̚ ͬ̂ͯ͋J̞̩̠͓͈̳̩ã̰̥̞͚͓v͚̞̯̺͇ḁ̲̹̤͎ͤS̱̰̠̣͚͛̈̌̄̚ͅc͖̥͉̹̮̻̓̊̑ri̭̗̳̩̾p͖͇̟͒t̅̇͋ͅ ̥o̯̗̱b͖̦̹̣̞f̺̥̽̂u͎̖̦̻̻͔̗̐ͥ̂̓̒̅̅s̰̪̞ͫ̿c̲͈̪͓̖ͭ̽â̩͙ͅt̻̺͚ō̝̗͔̗̰r̠̩̤͚̋ͩ";
 function CopyResult(button) {
     button.innerText = "Copied!";
     navigator.clipboard.writeText(document.getElementById('result_text').value);
@@ -447,9 +448,20 @@ function DeobfuscationProtectionChanged(on) {
 let deobfuscationProtectionMode = "skip";
 function DeobfuscationProtectionModeChanged(mode) {
     deobfuscationProtectionMode = mode;
+    document.getElementById("custom_code_edit_button").style.display = mode === "custom" ? "" : "none";
+}
+const deobfuscationCustomCodeEditorTextArea = document.getElementById("deobfuscation_custom_code_text_area");
+function ShowCustomCodeEditor(show) {
+    ShowOptions(false);
+    document.getElementById("main_page").style.display = show ? "none" : "";
+    document.getElementById("customize_deobfuscation_code_page").style.display = show ? "" : "none";
+}
+function AutoResizeTextarea(textarea, padding) {
+    textarea.style.height = "auto";
+    textarea.style.height = (textarea.scrollHeight - padding * 2) + "px";
 }
 let debugVarIndex = 0;
-const debuggingVarNames = false;
+let debuggingVarNames = false;
 function GetRandomString(len, allowLonger) {
     if (debuggingVarNames)
         return "a_" + (debugVarIndex++);
@@ -771,7 +783,7 @@ function button() {
     // ''["constructor"]["fromCharCode"]
     const v_function_stringFromCharCode = GetVarName();
     result += v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
-    let v_bool_deobfuscationOk;
+    let v_bool_deobfuscationOk = "";
     if (isDeobfuscationProtection) {
         let current = "";
         const dummyString = GetRandomString(variableNameLength, allowLongerName);
@@ -785,13 +797,11 @@ function button() {
         // so we create a dummy function which will be surely formatted
         // but in javascript, you can convert functions to a string, and if you convert a user-defined function to string, you'll get back the exact string representation of the function
         // we can detect this and do stuff if we want
-        if (deobfuscationProtectionMode === "skip") {
-            v_bool_deobfuscationOk = GetVarName();
-            current += v_bool_deobfuscationOk + "=(" + v_function_deobfuscationProtection + "+[])["
-                + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
-                + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")==" + v_string_dummyString + ",";
-        }
-        else {
+        v_bool_deobfuscationOk = GetVarName();
+        current += v_bool_deobfuscationOk + "=(" + v_function_deobfuscationProtection + "+[])["
+            + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
+            + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")==" + v_string_dummyString + ",";
+        if (deobfuscationProtectionMode !== "skip") {
             const v_string_otherFunctionName = GetVarName();
             const v_string_param1_deobfuscationProtection = GetVarName();
             current += v_string_otherFunctionName + "=" + v_function_function + "('" + v_string_param1_deobfuscationProtection + "',";
@@ -800,12 +810,20 @@ function button() {
                 return v_function_stringFromCharCode + "(" + charCodes.map(charCode => GetNumber(charCode))
                     .join(",") + ")";
             }
-            if (deobfuscationProtectionMode === "error")
-                current += GetCharCodes("function z(){" + v_string_param1_deobfuscationProtection + "!='" + dummyString + "'&&z()}z()");
-            else if (deobfuscationProtectionMode === "loop")
-                current += GetCharCodes("if(" + v_string_param1_deobfuscationProtection + "!='" + dummyString + "')for(;;){}");
-            else
-                throw new Error("Unknown deobfuscation protection mode");
+            switch (deobfuscationProtectionMode) {
+                case "error":
+                    current += GetCharCodes("!function ƒ(){" + v_string_param1_deobfuscationProtection + "=='" + dummyString + "'||ƒ()}()");
+                    break;
+                case "loop":
+                    current += GetCharCodes("if(" + v_string_param1_deobfuscationProtection + "!='" + dummyString + "')for(;;){}");
+                    break;
+                case "custom":
+                    current += GetCharCodes(v_string_param1_deobfuscationProtection + "=='" + dummyString
+                        + "'||!function(){" + deobfuscationCustomCodeEditorTextArea.value + "}()");
+                    break;
+                default:
+                    throw new Error("Unknown deobfuscation protection mode");
+            }
             current += ")((" + v_function_deobfuscationProtection + "+[])["
                 + [v_char_s, v_char_u, v_char_b, v_char_s, v_char_t, v_char_r].join("+")
                 + "](" + GetNumber(functionStart.length + 2) + "," + GetNumber(dummyString.length) + ")),";
@@ -820,9 +838,8 @@ function button() {
     }
     shuffle(finalLetters);
     result += finalLetters.join(",") + ";";
-    if (isDeobfuscationProtection && deobfuscationProtectionMode === "skip") {
+    if (isDeobfuscationProtection)
         result += v_bool_deobfuscationOk + "&&";
-    }
     result += v_function_function + "(";
     // maximum number of function arguments is limited (65535 on chrome), so for long texts, we need to split up the process.
     // batchCount tells that how many arguments we use for a function call

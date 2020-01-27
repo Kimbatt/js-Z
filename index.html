@@ -95,7 +95,7 @@
 <body>
 
 <div id="main_page">
-    <div style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">Type your Javascript code here:</div>
+    <div style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">Enter your Javascript code here:</div>
     <textarea id="text_area">alert("asdf1234 🅱")</textarea>
     <br />
     <div style="margin: 0px 20px; display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center; align-content: flex-start;">
@@ -151,16 +151,31 @@
                     <option value="skip">Don't run your code</option>
                     <option value="error">Throw an error</option>
                     <option value="loop">Create an infinite loop</option>
+                    <option value="custom">Run a custom code</option>
                 </select>
             </div>
         </div>
-        <button style="width: 150px; margin: 20px;" onclick="ShowOptions(false)">OK</button>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button style="width: 150px; margin: 20px;" onclick="ShowOptions(false)">OK</button>
+            <button style="width: 220px; margin: 20px; display: none;" id="custom_code_edit_button" onclick="ShowCustomCodeEditor(true)">Edit custom code</button>
+        </div>
     </div>
 </div>
 <div id="customize_page" style="display: none;">
     <div style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">Enter characters to use:<br>(enter a character more than once to increase its chance to appear)</div>
     <textarea id="customize_text_area"></textarea>
     <button style="margin-left: 20px;" onclick="ToggleCustomizeMode(false)">Done</button>
+    <div id="invalid_chars" style="margin-left: 20px;"></div>
+</div>
+<div id="customize_deobfuscation_code_page" style="display: none;">
+    <div style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">Enter code to run when your code is deobfuscated:</div>
+    <div style="margin: 0px 0px 10px 20px; font-size: 20px; font-family: Consolas, 'Courier New', Courier, monospace;">
+        <span style="color: #358cd6;">function</span> <span style="color: #dcdcaa;">customFunction</span>() {
+    </div>
+    <textarea id="deobfuscation_custom_code_text_area" placeholder="window.location.href=&quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;"
+        style="min-height: 200px;" oninput="AutoResizeTextarea(this, 10)"></textarea>
+    <div style="margin: 5px 0px 0px 20px; font-size: 20px; font-family: Consolas, 'Courier New', Courier, monospace;">}</div>
+    <button style="margin-left: 20px;" onclick="ShowCustomCodeEditor(false)">Done</button>
     <div id="invalid_chars" style="margin-left: 20px;"></div>
 </div>
 
