@@ -104,8 +104,8 @@
             <div style="font-weight: bold; font-size: 20px; margin-right: 10px; margin: 10px;">Charset</div>
             <select id="charset_selector" style="font-size: 20px; margin: 10px;" onchange="CharsetChanged(this.value)">
                 <option id="type_zalgo" value="zalgo">Zalgo</option>
-                <option id="type_space" value="space">Invisible characters</option>
-                <option value="i">IIII</option>
+                <option id="type_invisible" value="invisible">Invisible characters</option>
+                <option value="iiii">IIII</option>
                 <option value="lines">Lines and stuff</option>
                 <option value="custom">Custom</option>
             </select>
@@ -134,11 +134,17 @@
     style="display: none; justify-content: center; align-items: center; position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4);"
     onclick="event.target===this&&ShowOptions(false)">
     <div style="background: black; border-radius: 10px;">
-        <div style="margin: 10px 5px; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 50px 0px 15px;">
-            <div class="option">
-                <label
-                    title="Check this box to generate code that is compatible with older browsers"
-                    ><input onchange="CompatibilityModeChanged(this.checked)" type="checkbox"> Compatibility mode</label>
+        <div style="margin: 10px 5px; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 20px 0px 15px;">
+            <div class="option" title="Generate code to be run on the selected platform.
+Choose the 'Modern browsers' option to support modern browsers only.
+Choose 'Old browsers' if you want the code to run on both old and new browsers (in this case, you cannot use some of the charsets).
+The 'Node.js' option will work for Node.js (obviously), and for most of the modern browsers as well.">
+                <div style="display: inline; margin-right: 20px;">Target: </div>
+                <select style="font-size: 20px;" onchange="CodeGenerationTargetChanged(this.value)">
+                    <option value="es6+">Modern browsers (ES6 and later)</option>
+                    <option value="es5-">Old browsers (ES5 and earlier)</option>
+                    <option value="node">Node.js</option>
+                </select>
             </div>
             <div class="option">
                 <label

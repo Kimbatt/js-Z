@@ -508,32 +508,57 @@ function CheckCustomCharacters()
     }
 }
 
-let variableNamesCharset = "zalgo";
-function CharsetChanged(name: string)
+enum Charset
 {
-    variableNamesCharset = name;
-    document.getElementById("zalgo_level_slider_container")!.style.display = name === "zalgo" ? "" : "none";
-    document.getElementById("custom_charset_customizer_button")!.style.display = name === "custom" ? "" : "none";
+    Zalgo, Invisible, IIII, Lines, Custom
 }
 
-let isCompatibilityMode = false;
-function CompatibilityModeChanged(on: boolean)
-{
-    (<HTMLOptionElement>document.getElementById("type_zalgo")).disabled = on;
-    (<HTMLOptionElement>document.getElementById("type_space")).disabled = on;
+const StringToCharset : { [key: string]: Charset } = {
+    "zalgo": Charset.Zalgo,
+    "invisible": Charset.Invisible,
+    "iiii": Charset.IIII,
+    "lines": Charset.Lines,
+    "custom": Charset.Custom
+};
 
-    if (on)
+let charset = Charset.Zalgo;
+function CharsetChanged(name: string)
+{
+    charset = StringToCharset[name];
+    document.getElementById("zalgo_level_slider_container")!.style.display = charset === Charset.Zalgo ? "" : "none";
+    document.getElementById("custom_charset_customizer_button")!.style.display = charset === Charset.Custom ? "" : "none";
+}
+
+enum CodeGenerationTarget
+{
+    ES5AndEarlier, ES6AndLater, NodeJS
+}
+
+const StringToCodeGenerationTarget: { [key: string]: CodeGenerationTarget } = {
+    "es5-": CodeGenerationTarget.ES5AndEarlier,
+    "es6+": CodeGenerationTarget.ES6AndLater,
+    "node": CodeGenerationTarget.NodeJS
+};
+
+let codeGenerationTarget = CodeGenerationTarget.NodeJS;
+function CodeGenerationTargetChanged(target: string)
+{
+    codeGenerationTarget = StringToCodeGenerationTarget[target];
+    const newFeaturesDisabled = codeGenerationTarget === CodeGenerationTarget.ES5AndEarlier;
+
+    (<HTMLOptionElement>document.getElementById("type_zalgo")).disabled = newFeaturesDisabled;
+    (<HTMLOptionElement>document.getElementById("type_invisible")).disabled = newFeaturesDisabled;
+
+    if (newFeaturesDisabled)
     {
         const selector = <HTMLSelectElement>document.getElementById("charset_selector");
         const selectedValue = selector.value;
-        if (selectedValue === "zalgo" || selectedValue === "space")
+        if (selectedValue === "zalgo" || selectedValue === "invisible")
         {
-            selector.value = "i";
-            CharsetChanged("i");
+            selector.value = "iiii";
+            CharsetChanged("iiii");
         }
     }
-
-    isCompatibilityMode = on;
 }
 
 let isDeobfuscationProtection = false;
@@ -580,9 +605,9 @@ function GetRandomString(len: number, allowLonger: boolean)
     }
 
     let name = "";
-    switch (variableNamesCharset)
+    switch (charset)
     {
-        case "zalgo":
+        case Charset.Zalgo:
             name = RandomElementOf(startingChars);
             while (name.length < len)
             {
@@ -626,21 +651,21 @@ function GetRandomString(len: number, allowLonger: boolean)
                 }
             }
             break;
-        case "lines":
-            name = RandomElementsOfStringArray(isCompatibilityMode ? linesLetters_compatibility : linesLetters, len);
+        case Charset.Lines:
+            name = RandomElementsOfStringArray(codeGenerationTarget === CodeGenerationTarget.ES5AndEarlier ? linesLetters_compatibility : linesLetters, len);
             break;
-        case "space":
+        case Charset.Invisible:
             name = "\u02cb";
             for (let i = 0; i < len; ++i)
                 name += String.fromCharCode(0xfe00 + (Math.random() * 16) | 0);
             break;
-        case "i":
+        case Charset.IIII:
             if (len === undefined)
                 len = variableNameLength;
 
             name = RandomElementsOfStringArray(iLetters, len);
             break;
-        case "custom":
+        case Charset.Custom:
             if (customStartingChars.length === 0)
             {
                 alert("No custom characters set");
@@ -669,10 +694,10 @@ function GetRandomString(len: number, allowLonger: boolean)
 const usedVariableNames = new Set();
 function GetVarName()
 {
-    let name;
+    let name: string;
 
-    const allowLongerName = (variableNamesCharset === "zalgo");
-    let len;
+    const allowLongerName = (charset === Charset.Zalgo);
+    let len: number;
     if (allowLongerName)
     {
         const min = variableNameLength;
@@ -701,7 +726,7 @@ function GetVarName()
 
         if (breaker > 100)
         {
-            if (variableNamesCharset === "custom")
+            if (charset === Charset.Custom)
                 alert("Cannot get a variable name, try adding more custom characters or increase the variable name length");
             else
                 alert("Cannot get a variable name, try increasing the variable name length");
@@ -781,7 +806,7 @@ function button()
 
     usedVariableNames.clear();
 
-    let result = "(" + (isCompatibilityMode ? "function()" : "()=>") + "{var ";
+    let result = "(" + (codeGenerationTarget === CodeGenerationTarget.ES5AndEarlier ? "function()" : "()=>") + "{var ";
 
     const v_number_0 = GetVarName();
     const v_number_1 = GetVarName();
@@ -822,7 +847,7 @@ function button()
         letters[ch] = [variableName + "=" + GetNumber(ch), variableName];
     }
 
-    const allowLongerName = (variableNamesCharset === "zalgo");
+    const allowLongerName = (charset === Charset.Zalgo);
 
     result += v_number_0 + "='" + GetRandomString(variableNameLength, allowLongerName) + "'&'" + GetRandomString(variableNameLength, allowLongerName) + "',";
     result += v_number_1 + "=-~'" + GetRandomString(variableNameLength, allowLongerName) + "',";
@@ -918,7 +943,9 @@ function button()
 
     // "constructor"
     const v_string_constructor = GetVarName();
-    result += v_string_constructor + "=" + [v_char_c, v_char_o, v_char_n, v_char_s, v_char_t, v_char_r, v_char_u, v_char_c, v_char_t, v_char_o, v_char_r, ].join("+") + ",";
+    result += v_string_constructor + "=" +
+        [v_char_c, v_char_o, v_char_n, v_char_s, v_char_t, v_char_r, v_char_u, v_char_c, v_char_t, v_char_o, v_char_r, ].join("+")
+        + ",";
 
     // []["filter"]
     const v_function_filter = GetVarName();
@@ -928,53 +955,74 @@ function button()
     const v_function_function = GetVarName();
     result += v_function_function + "=" + v_function_filter + "[" + v_string_constructor + "],";
 
-    // []["filter"]["constructor"]("return btoa")()
-    const v_function_btoa = GetVarName();
-    result += v_function_btoa + "=" + v_function_function + "(" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_b, v_char_t, v_char_o, v_char_a].join("+") + ")(),";
+    let v_char_g: string;
+    let v_char_S: string;
 
-    // S = btoa("a ")[1]
-    const v_char_S = GetVarName();
-    result += v_char_S + "=" + v_function_btoa + "(" + v_char_a + "+" + v_char_space + ")[" + v_number_1 + "],";
+    if (codeGenerationTarget === CodeGenerationTarget.NodeJS)
+    {
+        // btoa is not available on node.js, so we need to use a different approach
+        // this version is not consistent across browsers, because converting native functions to string is not part of the ECMAScript standard
 
-    // g = btoa("b")[1]
-    const v_char_g = GetVarName();
-    result += v_char_g + "=" + v_function_btoa + "(" + v_char_b + ")[" + v_number_1 + "],";
+        // ''["constructor"]+[]
+        const v_string_StringConstructor = GetVarName();
+        result += v_string_StringConstructor + "=''[" + v_string_constructor + "]+[],"
 
-    // . = (+("16e32")+[])[1]
-    const v_char_dot = GetVarName();
-    result += v_char_dot + "=(+(" + v_number_16 + "+" + v_char_e + "+" + v_number_32 + ")+[])[" + v_number_1 + "],";
+        // (''["constructor"]+[])[1+8]
+        v_char_S = GetVarName();
+        result += v_char_S + "=" + v_string_StringConstructor + "[" + v_number_1 + "+" + v_number_8 + "],";
+
+        // (''["constructor"]+[])[16-2]
+        v_char_g = GetVarName();
+        result += v_char_g + "=" + v_string_StringConstructor + "[" + v_number_16 + "-" + v_number_2 + "],";
+    }
+    else
+    {
+        // []["filter"]["constructor"]("return btoa")()
+        const v_function_btoa = GetVarName();
+        result += v_function_btoa + "=" + v_function_function + "(" +
+            [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_b, v_char_t, v_char_o, v_char_a].join("+")
+            + ")(),";
+
+        // S = btoa("a ")[1]
+        v_char_S = GetVarName();
+        result += v_char_S + "=" + v_function_btoa + "(" + v_char_a + "+" + v_char_space + ")[" + v_number_1 + "],";
+
+        // g = btoa("b")[1]
+        v_char_g = GetVarName();
+        result += v_char_g + "=" + v_function_btoa + "(" + v_char_b + ")[" + v_number_1 + "],";
+    }
 
     // "toString"
     const v_string_toString = GetVarName();
     result += v_string_toString + "=" + [v_char_t, v_char_o, v_char_S, v_char_t, v_char_r, v_char_i, v_char_n, v_char_g].join("+") + ",";
 
-    // v = (32-1)["toString"](32)
-    const v_char_v = GetVarName();
-    result += v_char_v + "=(" + v_number_32 + "-" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),";
-
     // p = (16+8+1)["toString"](32)
     const v_char_p = GetVarName();
     result += v_char_p + "=(" + v_number_1 + "+" + v_number_8 + "+" + v_number_16 + ")[" + v_string_toString + "](" + v_number_32 + "),";
 
-    // []["filter"]["constructor"]("return eval")()
-    const v_function_eval = GetVarName();
-    result += v_function_eval + "=" + v_function_function + "(" + [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_v, v_char_a, v_char_l].join("+") + ")(),";
+    // []["constructor"]["constructor"]("return escape")()
+    const v_function_escape = GetVarName();
+    result += v_function_escape + "=[][" + v_string_constructor + "][" + v_string_constructor + "](" +
+        [v_char_r, v_char_e, v_char_t, v_char_u, v_char_r, v_char_n, v_char_space, v_char_e, v_char_s, v_char_c, v_char_a, v_char_p, v_char_e].join("+")
+        + ")(),";
 
-    // S = btoa("d ")[1]
+    // C = escape(''["big"]())[2]
     const v_char_C = GetVarName();
-    result += v_char_C + "=" + v_function_btoa + "(" + v_char_d + "+" + v_char_space + ")[" + v_number_1 + "],";
+    result += v_char_C + "=" + v_function_escape + "(''[" + [v_char_b, v_char_i, v_char_g].join("+") + "]())[" + v_number_2 + "],";
 
-    // m = btoa("ba")[1]
+    // m = (16+4+2)["toString"](32)
     const v_char_m = GetVarName();
-    result += v_char_m + "=" + v_function_btoa + "(" + v_char_b + "+" + v_char_a + ")[" + v_number_1 + "],";
+    result += v_char_m + "=(" + v_number_16 + "+" + v_number_4 + "+" + v_number_2 + ")[" + v_string_toString + "](" + v_number_32 + "),";
 
-    // h = (17)["toString"](32)
+    // h = (16+1)["toString"](32)
     const v_char_h = GetVarName();
     result += v_char_h + "=(" + v_number_16 + "+" + v_number_1 + ")[" + v_string_toString + "](" + v_number_32 + "),";
 
     // ''["constructor"]["fromCharCode"]
     const v_function_stringFromCharCode = GetVarName();
-    result += v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" + [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+") + "],";
+    result += v_function_stringFromCharCode + "=''[" + v_string_constructor + "][" +
+        [v_char_f, v_char_r, v_char_o, v_char_m, v_char_C, v_char_h, v_char_a, v_char_r, v_char_C, v_char_o, v_char_d, v_char_e].join("+")
+        + "],";
 
     let v_bool_deobfuscationOk = "";
     if (isDeobfuscationProtection)
@@ -985,7 +1033,7 @@ function button()
         current += v_string_dummyString + "='" + dummyString + "',";
 
         const v_function_deobfuscationProtection = GetVarName();
-        const functionStart = isCompatibilityMode ? "function()" : "()=>";
+        const functionStart = codeGenerationTarget === CodeGenerationTarget.ES5AndEarlier ? "function()" : "()=>";
         current += v_function_deobfuscationProtection + "=" + functionStart + "{'" + dummyString + "'},";
 
         // how this works:
@@ -1023,7 +1071,7 @@ function button()
                     break;
                 case "custom":
                     current += GetCharCodes(v_string_param1_deobfuscationProtection + "=='" + dummyString
-                    + "'||!function(){" + deobfuscationCustomCodeEditorTextArea.value + "}()");
+                        + "'||!function(){" + deobfuscationCustomCodeEditorTextArea.value + "}()");
                     break;
                 default:
                     throw new Error("Unknown deobfuscation protection mode");
