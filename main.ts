@@ -423,7 +423,7 @@ function CheckCustomCharacters()
     const allChars: string[] = [];
     const allStartingChars: string[] = [];
 
-    const characters = (<HTMLTextAreaElement>document.getElementById("customize_text_area")).value.split("");
+    const characters = [...(<HTMLTextAreaElement>document.getElementById("customize_text_area")).value];
 
     for (let i = 0; i < characters.length; ++i)
     {

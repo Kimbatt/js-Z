@@ -360,7 +360,7 @@ function CheckCustomCharacters() {
     const invalidChars = new Set();
     const allChars = [];
     const allStartingChars = [];
-    const characters = document.getElementById("customize_text_area").value.split("");
+    const characters = [...document.getElementById("customize_text_area").value];
     for (let i = 0; i < characters.length; ++i) {
         const char = characters[i];
         if (char === "\n")
