@@ -13,3 +13,6 @@ So if you really want to hide your code, you should run it through a *real* obfu
 ### Using as a library
 Add [lib.ts](lib.ts) to your project (or [dist/lib.js](dist/lib.js) if you are using javascript), then call the `Obfuscate` function.  
 See comments at the `Obfuscate` function and the `ObfuscationOptions` interface in [lib.ts](lib.ts) for more information.
+
+### License
+[WTFPL](LICENSE.txt)
