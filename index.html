@@ -4,43 +4,37 @@
 <head>
     <meta charset="utf-8">
     <title>js-Z</title>
-    
+
     <style>
-        body
-        {
+        body {
             background: #323639;
             color: white;
             font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
-        
-        button
-        {
+
+        button {
             background-color: #146dff;
             border: none;
             border-radius: 5px;
             color: #ffffff;
             padding: 12px 15px 12px 15px;
-            margin: 20px 10px;
             font-size: 20px;
             cursor: pointer;
             transition: 0.15s;
             outline: none;
         }
-        
-        button:hover
-        {
+
+        button:hover {
             background-color: #54adff;
             cursor: pointer;
         }
 
-        button:disabled
-        {
+        button:disabled {
             background-color: #77abff;
             cursor: not-allowed;
         }
-        
-        textarea
-        {
+
+        textarea {
             color: #ffffff;
             background: #484D50;
             border: 1px solid #bbbbbb;
@@ -53,7 +47,8 @@
             height: 200px;
             resize: none;
         }
-/*
+
+        /*
         input
         {
             font-family: "Consolas";
@@ -64,28 +59,32 @@
             width: 200px;
         }
 */
-        .option
-        {
+        .option {
             font-weight: bold;
-            font-size: 20px; margin: 10px;
+            font-size: 20px;
+            margin: 10px;
             margin: 10px 0px;
         }
-        
-        .slider-container
-        {
+
+        .slider-container {
             display: flex;
             flex-direction: column;
-            justify-content: space-evenly;
-            margin: 20px 10px;
-            padding-top: 0px;
+            justify-content: space-between;
+            height: 60px;
+            padding: 10px;
+            gap: 10px;
             border: 2px solid #146dff;
             border-radius: 5px;
             background: #202020;
-            align-self: stretch;
         }
 
-        .invalid_char
-        {
+        .slider-container>*:nth-child(1) {
+            font-weight: bold;
+            font-size: 20px;
+            color: white;
+        }
+
+        .invalid_char {
             background: #525252;
             padding: 4px;
         }
@@ -93,103 +92,121 @@
 </head>
 
 <body>
-
-<div id="main_page">
-    <div style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">Enter your Javascript code here:</div>
-    <textarea id="text_area">alert("asdf1234 🅱")</textarea>
-    <br />
-    <div style="margin: 0px 20px; display: flex; flex-wrap: wrap; justify-content: flex-start; align-items: center; align-content: flex-start;">
-        <button onclick="button()" style="align-self: center; font-size: 35px;">Fuck shit up</button>
-        <div class="slider-container">
-            <div style="font-weight: bold; font-size: 20px; margin-right: 10px; margin: 10px;">Charset</div>
-            <select id="charset_selector" style="font-size: 20px; margin: 10px;" onchange="CharsetChanged(this.value)">
-                <option id="type_zalgo" value="zalgo">Zalgo</option>
-                <option id="type_invisible" value="invisible">Invisible characters</option>
-                <option value="iiii">IIII</option>
-                <option value="lines">Lines and stuff</option>
-                <option value="custom">Custom</option>
-            </select>
+    <div id="main_page" style="display: flex; flex-direction: column;">
+        <div
+            style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">
+            Enter your JavaScript code here:</div>
+        <textarea id="text_area">alert("asdf1234 🅱")</textarea>
+        <div style="margin: 10px 20px; display: flex; flex-wrap: wrap; gap: 10px;">
+            <button onclick="ObfuscateButton()" style="align-self: center; font-size: 35px;">Fuck shit up</button>
+            <div class="slider-container">
+                <div>Charset</div>
+                <select id="charset_selector" style="font-size: 20px;" onchange="CharsetChanged(this.value)">
+                    <option id="type_zalgo" value="zalgo">Zalgo</option>
+                    <option id="type_invisible" value="invisible">Invisible characters</option>
+                    <option value="iiii">IIII</option>
+                    <option value="lines">Lines and stuff</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+            <button id="custom_charset_customizer_button" style="display: none; align-self: center; font-size: 35px;"
+                onclick="ToggleCustomizeMode(true)">Customize characters</button>
+            <button style="align-self: center; font-size: 35px;" onclick="ShowOptions(true)">Options</button>
+            <div class="slider-container" id="variable_length_slider_container" style="width: 320px;">
+                <div id="variable_name_length_text">Variable name length: 5</div>
+                <input id="variable_name_length_slider" type="range" min="0" max="1" step="any"
+                    oninput="slider_variableLength(this)">
+            </div>
+            <div class="slider-container" id="zalgo_level_slider_container" style="width: 200px;">
+                <div id="zalgo_level_text">Zalgo level: 3</div>
+                <input id="zalgo_level_slider" type="range" min="0" max="1" step="any"
+                    oninput="slider_zalgoLevel(this)">
+            </div>
         </div>
-        <button id="custom_charset_customizer_button" style="display: none; align-self: center; font-size: 35px;"
-            onclick="ToggleCustomizeMode(true)">Customize characters</button>
-        <button style="align-self: center; font-size: 35px;"
-            onclick="ShowOptions(true)">Options</button>
-        <div class="slider-container" id="variable_length_slider_container">
-            <div id="variable_name_length_text" style="padding: 15px; font-size: 20px; font-weight: bold; color: white;">Variable name length: 5</div>
-            <input type="range" min="2" max="50" value="5" oninput="slider_variableLength(this)" style="margin: 0px 20px 0px 20px; width: 270px;">
-        </div>
-        <div class="slider-container" id="zalgo_level_slider_container">
-            <div id="zalgo_level_text" style="padding: 15px; font-size: 20px; font-weight: bold; color: white;">Zalgo level: 3</div>
-            <input type="range" min="0" max="100" value="3" oninput="slider_zalgoLevel(this)" style="margin: 0px 20px 0px 20px; width: 160px;">
+        <textarea id="result_text" style="height: 350px;" placeholder="Code will appear here" readonly></textarea>
+        <div style="margin: 10px 20px; display: flex; gap: 10px;">
+            <button onclick="try{eval(document.getElementById('result_text').value)}catch(e){alert(e)}"
+                style="width: 150px;">Eval this</button>
+            <button onclick="CopyResult(this)" onmouseleave="this.innerText='Copy this'" style="width: 150px;">Copy
+                this</button>
         </div>
     </div>
-    <textarea id="result_text" style="height: 350px;" placeholder="Code will appear here" readonly></textarea>
-    <br />
-    <div style="margin: 0px 20px;">
-        <button onclick="try{eval(document.getElementById('result_text').value)}catch(e){alert(e)}" style="width: 150px;">Eval this</button>
-        <button onclick="CopyResult(this)" onmouseleave="this.innerText='Copy this'" style="width: 150px;">Copy this</button>
-    </div>
-</div>
-<div id="options_overlay"
-    style="display: none; justify-content: center; align-items: center; position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4);"
-    onclick="event.target===this&&ShowOptions(false)">
-    <div style="background: black; border-radius: 10px;">
-        <div style="margin: 10px 5px; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 20px 0px 15px;">
-            <div class="option" title="Generate code to be run on the selected platform.
+    <div id="options_overlay"
+        style="display: none; justify-content: center; align-items: center; position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4);"
+        onclick="event.target===this&&ShowOptions(false)">
+        <div style="background: black; border-radius: 10px;">
+            <div
+                style="margin: 10px 5px; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 20px 0px 15px;">
+                <div class="option" title="Generate code to be run on the selected platform.
 Choose the 'Modern browsers' option to support modern browsers only.
 Choose 'Old browsers' if you want the code to run on both old and new browsers (in this case, you cannot use some of the charsets).
 The 'Node.js' option will work for Node.js (obviously), and for most of the modern browsers as well.">
-                <div style="display: inline; margin-right: 20px;">Target: </div>
-                <select style="font-size: 20px;" onchange="CodeGenerationTargetChanged(this.value)">
-                    <option value="es6+">Modern browsers (ES6 and later)</option>
-                    <option value="es5-">Old browsers (ES5 and earlier)</option>
-                    <option value="node">Node.js</option>
-                </select>
+                    <div style="display: inline; margin-right: 20px;">Target: </div>
+                    <select style="font-size: 20px;" onchange="CodeGenerationTargetChanged(this.value)">
+                        <option value="es6+">Modern browsers (ES6 and later)</option>
+                        <option value="es5-">Old browsers (ES5 and earlier)</option>
+                        <option value="nodejs">Node.js</option>
+                    </select>
+                </div>
+                <div class="option">
+                    <label
+                        title="Check this box to generate code that will not run properly if it is deobfuscated"><input
+                            onchange="DeobfuscationProtectionChanged(this.checked)" type="checkbox"> Deobfuscation
+                        protection</label>
+                </div>
+                <div class="option" id="deobfuscation_protection_options" style="visibility: hidden;">
+                    <div style="display: inline;">If deobfuscated: </div>
+                    <select style="font-size: 20px;" onchange="DeobfuscationProtectionModeChanged(this.value)">
+                        <option value="skip">Don't run your code</option>
+                        <option value="error">Throw an error</option>
+                        <option value="loop">Create an infinite loop</option>
+                        <option value="custom">Run a custom code</option>
+                    </select>
+                </div>
             </div>
-            <div class="option">
-                <label
-                    title="Check this box to generate code that will not run properly if it is deobfuscated"
-                    ><input onchange="DeobfuscationProtectionChanged(this.checked)" type="checkbox"> Deobfuscation protection</label>
-            </div>
-            <div class="option" id="deobfuscation_protection_options" style="visibility: hidden;">
-                <div style="display: inline;">If deobfuscated: </div>
-                <select style="font-size: 20px;" onchange="DeobfuscationProtectionModeChanged(this.value)">
-                    <option value="skip">Don't run your code</option>
-                    <option value="error">Throw an error</option>
-                    <option value="loop">Create an infinite loop</option>
-                    <option value="custom">Run a custom code</option>
-                </select>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button style="width: 150px; margin: 20px;" onclick="ShowOptions(false)">OK</button>
+                <button style="width: 220px; margin: 20px; display: none;" id="custom_code_edit_button"
+                    onclick="ShowCustomCodeEditor(true)">Edit custom code</button>
             </div>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <button style="width: 150px; margin: 20px;" onclick="ShowOptions(false)">OK</button>
-            <button style="width: 220px; margin: 20px; display: none;" id="custom_code_edit_button" onclick="ShowCustomCodeEditor(true)">Edit custom code</button>
+    </div>
+    <div id="customize_page" style="display: none;">
+        <div
+            style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">
+            Enter characters to use:<br>(enter a character more than once to increase its chance to appear)
         </div>
+        <textarea id="customize_text_area"></textarea>
+        <button style="margin-left: 20px;" onclick="ToggleCustomizeMode(false)">Done</button>
+        <div id="invalid_chars" style="margin-left: 20px;"></div>
     </div>
-</div>
-<div id="customize_page" style="display: none;">
-    <div style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">Enter characters to use:<br>(enter a character more than once to increase its chance to appear)</div>
-    <textarea id="customize_text_area"></textarea>
-    <button style="margin-left: 20px;" onclick="ToggleCustomizeMode(false)">Done</button>
-    <div id="invalid_chars" style="margin-left: 20px;"></div>
-</div>
-<div id="customize_deobfuscation_code_page" style="display: none;">
-    <div style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">Enter code to run when your code is deobfuscated:</div>
-    <div style="margin: 0px 0px 10px 20px; font-size: 20px; font-family: Consolas, 'Courier New', Courier, monospace;">
-        <span style="color: #358cd6;">function</span> <span style="color: #dcdcaa;">customFunction</span>() {
+    <div id="customize_deobfuscation_code_page" style="display: none;">
+        <div
+            style="padding-top: 10px; padding-left: 20px; margin-bottom: 20px; font-weight: bold; color: white; font-size: 18px;">
+            Enter code to run when your code is deobfuscated:</div>
+        <div
+            style="margin: 0px 0px 10px 20px; font-size: 20px; font-family: Consolas, 'Courier New', Courier, monospace;">
+            <span style="color: #358cd6;">function</span> <span style="color: #dcdcaa;">customFunction</span>() {
+        </div>
+        <textarea id="deobfuscation_custom_code_text_area"
+            placeholder="window.location.href=&quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;"
+            style="min-height: 200px;" oninput="AutoResizeTextarea(this, 10)"></textarea>
+        <div
+            style="margin: 5px 0px 0px 20px; font-size: 20px; font-family: Consolas, 'Courier New', Courier, monospace;">
+            }</div>
+        <button style="margin-left: 20px;" onclick="ShowCustomCodeEditor(false)">Done</button>
+        <div id="invalid_chars" style="margin-left: 20px;"></div>
     </div>
-    <textarea id="deobfuscation_custom_code_text_area" placeholder="window.location.href=&quot;https://youtube.com/watch?v=dQw4w9WgXcQ&quot;"
-        style="min-height: 200px;" oninput="AutoResizeTextarea(this, 10)"></textarea>
-    <div style="margin: 5px 0px 0px 20px; font-size: 20px; font-family: Consolas, 'Courier New', Courier, monospace;">}</div>
-    <button style="margin-left: 20px;" onclick="ShowCustomCodeEditor(false)">Done</button>
-    <div id="invalid_chars" style="margin-left: 20px;"></div>
-</div>
 
-<a href="https://github.com/Kimbatt/js-Z" style="position: absolute; width: 32px; height: 32px; top: 20px; right: 20px;">
-    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="white" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-</a>
+    <a href="https://github.com/Kimbatt/js-Z"
+        style="position: absolute; width: 32px; height: 32px; top: 20px; right: 20px;">
+        <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill="white"
+                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+        </svg>
+    </a>
 
-<script src="dist/main.js"></script>
+    <script src="dist/main.js" type="module"></script>
 
 </body>
 
